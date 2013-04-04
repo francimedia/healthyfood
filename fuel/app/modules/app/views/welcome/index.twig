@@ -1,0 +1,191 @@
+{% extends "layouts/app.twig" %}
+
+
+{% block calToday %}
+    <ul class="events-today"> 
+        <li class="accept">
+            <a href="#">
+                <div class="right">
+                    <span class="icon brand twitter-2"></span>
+                    <span class="icon brand facebook-2"></span>
+                </div>
+                <strong>[1] Pre Screening: The Great Gatsby</strong>
+                <small>The Ziegfeld Theater</small>
+            </a>
+        </li>
+        <li class="cancel light">
+            <a href="#">
+                <div class="right"><span class="icon brand facebook-2"></span></div>
+                <strong>[2] Orlando Magic @ New York Knicks</strong>
+                <small>Court side seats / Madison Square Garden</small>
+            </a>
+        </li>
+        <li class="accept">
+            <a href="#">
+                <div class="right">
+                    <span class="icon brand twitter-2"></span>
+                    <span class="icon brand facebook-2"></span>
+                </div>
+                <strong>[3] Made in NY: Austin</strong>
+                <small>AMOA-Arthouse, 700 Congress Ave.</small>
+            </a>
+        </li>
+        <li class="cancel light">
+            <a href="#">
+                <div class="right">
+                    <span class="icon brand google-plus-2"></span>
+                    <span class="icon brand twitter-2"></span>
+                    <span class="icon brand facebook-2"></span>
+                </div>
+                <strong>[4]Tasting Night!</strong>
+                <small>Whole Foods - Chelsea 250 7th Ave</small>
+            </a>
+        </li>
+        <li class="accept">
+            <a href="#">
+                <div class="right">
+                    <span class="icon brand twitter-2"></span>
+                </div>
+                <strong>Macy's Flower show</strong>
+                <small>Macy's Herald Square, Manhattan</small>
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block calTomorrow %}
+    <ul>
+        <li class="dark">
+            <strong>Lorem ipsum</strong>
+            <small>details</small>
+        </li>
+        <li class="theme">
+            <strong>Lorem ipsum</strong>
+            <small>details</small>
+        </li>
+
+        <li class="light">
+            <strong>Lorem ipsum</strong>
+            <small>details</small>
+        </li>
+        <li class="accept">
+            <strong>Lorem ipsum</strong>
+            <small>details</small>
+        </li>
+        <li class="cancel">
+            <strong>Lorem ipsum</strong>
+            <small>details</small>
+        </li>
+        <li class="secondary">
+            <strong>Lorem ipsum</strong>
+            <small>details</small>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block calFull %}
+    <ul>
+        <li>
+            <a href="#">
+                <strong>Event</strong>
+                <small>details</small>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <strong>Event</strong>
+                <small>details</small>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <strong>Event</strong>
+                <small>details</small>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <strong>Event</strong>
+                <small>details</small>
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+
+{% block map %}
+    <div id="map-container">
+        <a href="#" id="map-close" class="icon close btn-map mhide"></a>
+
+        <div class="map" id="map-overlay"></div>
+        <div class="map cal-push" id="map">
+            {#<a href="#" class="zoomer zoomin">+</a>#}
+            {#<a href="#" class="zoomer zoomout">-</a>#}
+        </div>
+        <a href="#" id="geolocate" class="btn-map">Find me</a>
+        {% block navCalendar %}
+            <section id="calendar-nav" class="cal-push">
+                <nav class="groupbar">
+                    <a href="#" id="calendarToday" data-content="cal-today" class="active">Today</a>
+                    <a href="#" id="calendarTomorrow" data-content="cal-tomorrow">Tomorrow</a>
+                    <a href="#" id="calendarFull" data-content="cal-full" class="icon calendar"></a>
+                </nav>
+            </section>
+        {% endblock %}
+    </div>
+{% endblock %}
+
+
+{% block subpage %}
+    <section id="subpage">
+        <header data-back="left" class="main-header">
+            <nav class="">
+                <ul>
+                    <li><a href="#aside-menu" data-router="aside" data-icon="menu"></a></li>
+                    <li class="title centered app-name">
+                        <h1>Healthy food</h1>
+                    </li>
+                    <li>
+                        <div class="logo-bird"></div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <article class="active">
+            <span class="event-date">Friday, March 22, 2013</span>
+
+            <img src="/assets/images/event.png">
+            <div class="event-title">
+                <h1>Made in NOISE</h1>
+            </div>
+
+            <small>22 West 21st street <span class="icon pushpin"></span></small>
+
+
+            <section id="event-nav">
+                <nav class="groupbar">
+                    <a href="#" class="active">Info</a>
+                    <a href="#" class="">RSVP</a>
+                    <a href="#" class="">Social Buzz</a>
+                    <a href="#" class="">Pictures</a>
+                </nav>
+            </section>
+        </article>
+
+        <footer class="main-footer">
+            <nav>
+                <a href="#home" class="active" data-icon="home" data-router="section"></a>
+                <a href="#home" id="link-profile" data-icon="users" data-router="section"></a>
+                <a href="#home" data-icon="search" data-router="section"></a>
+                <a href="#home" data-router="section" class="logo-text"></a>
+            </nav>
+        </footer>
+    </section>
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script src="assets/app/app.js"></script>
+{% endblock %}

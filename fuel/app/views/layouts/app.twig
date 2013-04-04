@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %} Healthy food</title>
+    {% block meta %}
+        <meta name="HandheldFriendly" content="True">
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <meta http-equiv="cleartype" content="on">
+        <link rel="apple-touch-startup-image" href="/assets/images/splash.png">
+
+    {% endblock %}
+    <link href='http://fonts.googleapis.com/css?family=Puritan:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" media="all" href="assets/app/app.css"/>
+</head>
+<body class="app">
+{#{% Calendar section for displaying events + map %}#}
+<section id="home" class="active">
+    <header class="main-header">
+        <nav class="">
+            <ul>
+                <li><a href="#aside-menu" data-router="aside" data-icon="menu"></a></li>
+                <li class="title centered app-name">
+                    <h1>Healthy food</h1>
+                </li>
+                <li>
+                    <div class="logo-bird"></div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <article id="calendar-view" class="active">
+        {% block map endblock %}
+        <div class="calendar-layout cal-push list scroll">
+            <div id="cal-today" class="current">
+                {% block calToday endblock %}
+            </div>
+            <div id="cal-tomorrow">
+                {% block calTomorrow endblock %}
+            </div>
+            <div id="cal-full">
+                {% block calFull endblock %}
+            </div>
+        </div>
+    </article>
+    <footer class="main-footer">
+        <nav>
+            <a href="#home" class="active" data-icon="home" data-router="section"></a>
+            <a href="#home" id="link-profile" data-icon="users" data-router="section"></a>
+            <a href="#home" data-icon="search" data-router="section"></a>
+            <a href="#home" data-router="section" class="logo-text"></a>
+        </nav>
+    </footer>
+</section>
+
+
+
+{% block subpage endblock %}
+
+<aside id="aside-menu">
+    <header data-title="Menu"></header>
+    <article class="active list scroll">
+        <ul>
+            <li>
+                <strong>My Account</strong>
+            </li>
+            <li>
+                <strong>My Events</strong>
+            </li>
+            <li>
+                <strong>My Network</strong>
+            </li>
+            <li>
+                <strong>VIP Service</strong>
+            </li>
+            <li>
+                <strong>Contact</strong>
+            </li>
+        </ul>
+    </article>
+</aside>
+{% block scripts endblock %}
+</body>
+</html> 

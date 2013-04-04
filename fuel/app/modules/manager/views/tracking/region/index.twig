@@ -1,0 +1,53 @@
+{% extends "layouts/manager.twig" %}
+
+ 
+{% block head %} sdf
+    {{ parent() }}
+
+
+{% endblock %}
+
+
+{% block content %}
+
+ 
+
+{% if tracking_regions %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+        {% for tracking_region in tracking_regions %}
+		<tr>
+		<td>
+			{{ tracking_region.name|e }} 
+		</td>
+			<td>
+				<a href="/manager/tracking/region/view/{{tracking_region.id}}">
+					View
+				</a>
+				<a href="/manager/tracking/region/edit/{{tracking_region.id}}">
+					Edit
+				</a>
+				<a href="/manager/tracking/region/delete/{{tracking_region.id}}" onclick="return confirm('Are you sure?')">
+					Delete
+				</a> 
+			</td>
+		</tr>
+	{% endfor %}	
+	</tbody>
+</table>
+
+{% else %}
+
+<p>No Tracking_regions.</p>
+
+{% endif %}
+ 
+
+
+{% endblock %}

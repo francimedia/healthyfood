@@ -1,0 +1,16 @@
+.calendar-layout {
+  position: relative;
+  top: 149px;
+  height:52%;
+
+  &.mapOpened {
+    top: 210px;
+  }
+  & > div {
+    height: auto;
+    display: none;
+    &.current {
+      display: block;
+    }
+  }
+}

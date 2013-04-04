@@ -1,0 +1,42 @@
+{% extends "layouts/manager.twig" %}
+
+{% block title %} Add Venue{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+  <fieldset>
+	{{ Form.open() }}
+
+    <legend>Add Venue</legend>
+  
+		<p>
+			<label>Foursquare Venue ID</label>
+			{{ Form.input('venue_id', '', {'style': ''}) }}
+		</p>
+
+		<p>
+			{{ Form.button('submitter', 'Save', {'type': 'submit', 'class': 'btn btn-primary'}) }}
+		</p>
+
+	{{ Form.close() }}
+</fieldset>
+
+
+
+ 
+{% endblock %}
+    
+
+{% block scripts %} 
+    {{ parent() }}
+
+	</script>
+{% endblock %}
