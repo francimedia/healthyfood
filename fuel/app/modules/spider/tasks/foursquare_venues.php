@@ -33,22 +33,31 @@ class Foursquare_venues
 	   	$this->spider->updateAllLocations();
     }
 
-    // run updateLocations as infinite service
-    public function updateLocationsService() {
+    // run updateVenues as infinite service
+    public function updateVenuesService() {
     	while(1) {
     		if($this->spider->getCurrentRateLimit() == 0) {
     			// wait for 15min if we hit the rate limit
-    			\Cli::error('Warning: Rate limit hit! Script will pause for 15mins.');	
+    			$message = 'Warning: Rate limit hit! Script will pause for 15mins.';
+                \Cli::error($message); 
+                $this->spider->emailReport($message);
     			\Cli::wait(1800);
     		}
-    		$this->spider->updateLocations();
-    		\Cli::wait(1, true);
+    		$success = $this->spider->updateVenues();
+            if(!$success) {
+                $message = 'Warning: Probably hit the rate limit. Foursquare headers incorrect at the moment! Script will pause for 15mins.';
+                \Cli::error($message); 
+                $this->spider->emailReport($message);
+                \Cli::wait(1800);   
+            } else {
+                \Cli::wait(5, true);    
+            }
     	}
     }
 
-    public function updateLocations() {    	
-    	$this->spider->updateLocations();
-	}
+    public function updateVenues() {     
+        $this->spider->updateVenues();
+    }
  
 	public function calculateDeltas() {	
     	$this->spider->calculateDeltas();

@@ -33,8 +33,8 @@ class Controller_Venues extends \Controller
 
 			Package::load('Spider'); 	
 			$FoursquareClient = new \Spider\Foursquare\Client;
-			$venues = $FoursquareClient->getVenueInfoBatch(array($venue_id));
- 
+			$venues = $FoursquareClient->getVenueInfoBatch(array($venue_id), \Input::post('region_id'));
+  
  			$venue = isset($venues->response->responses[0]->response->venue) ?
  				$venues->response->responses[0]->response->venue : false;
 

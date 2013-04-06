@@ -1,6 +1,6 @@
 {% extends "layouts/manager.twig" %}
 
-{% block title %} Add Venue{% endblock %}
+{% block title %} Add Keyword{% endblock %}
 
 {% block head %}
     {{ parent() }}
@@ -15,16 +15,11 @@
   <fieldset>
 	{{ Form.open() }}
 
-    <legend>Add Venue</legend>
+    <legend>Add Keyword</legend>
   
 		<p>
-			<label>Foursquare Venue ID</label>
-			{{ Form.input('venue_id', '', {'style': ''}) }}
-		</p>
-  
-		<p>
-			<label>Region  ID</label>
-			{{ Form.input('region_id', '', {'style': ''}) }}
+			<label>Keyword</label>
+			{{ Form.input('keyword', '', {'style': ''}) }}
 		</p>
 
 		<p>

@@ -1,0 +1,209 @@
+{% extends "layouts/manager.twig" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+
+{% endblock %}
+
+
+{% block content %}
+	
+
+
+  <fieldset>
+	{{ Form.open({'action': 'manager/dashboard/chart', 'method': 'post'}) }}
+
+	<legend>Options</legend> 
+	<p>
+	    <div class="input-prepend input-append">
+	        <span class="add-on"><b class="icon-list-alt"></b></span>
+	        <select class="venue-filter" name="charts[]" multiple="multiple" data-title="Chart types">
+	            {% for chart in charts %}
+	            <option value="{{ chart.id }}" {% if chart.id in Input.post('charts') %}selected="selected"{% endif %}>
+	             	{{ chart.name }}
+	            </option>
+	            {% endfor %} 
+	        </select>   
+	        <button type="submit" class="btn btn-primary">Update view</button>
+	    </div>
+	</p>
+
+
+    {% for id in ids %}
+	{{ Form.hidden('ids[]', id ) }}
+    {% endfor %}
+
+    {% for label in labels %}
+	{{ Form.hidden('labels[]', label ) }}
+    {% endfor %}
+
+	{{ Form.close() }}
+</fieldset>	
+  
+
+<div id="container" style="height: 500px; min-width: 500px"></div>
+<div id="container2" style="height: 500px; min-width: 500px"></div>
+
+
+{% endblock %}
+    
+
+{% block scripts %} 
+    {{ parent() }}
+
+	<script src="http://code.highcharts.com/stock/highstock.js"></script>
+	<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+	<script type="text/javascript">
+
+$(function() {
+	var seriesOptions = [],
+		yAxisOptions = [],
+		pieSeries = [],
+		seriesCounter = 0,
+		items = {{ items }},
+		colors = Highcharts.getOptions().colors;
+
+	$.each(items, function(i, item) {
+
+		// $.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename='+ name.toLowerCase() +'-c.json&callback=?',	function(data) {
+		$.getJSON('/manager/api/records.json?timespan=day&properties=checkin&ids='+ item.id +'&datatype=absolute',	function(data) {
+		// 	$.getJSON('/manager/api/records.json?timespan=day&properties=photos&ids='+ item.id +'&datatype=absolute',	function(data) {
+			
+			console.log(i);
+
+			var total = 0;
+			$.each(data, function(j, row) {
+				total += row[1];
+			}); 
+
+			pieSeries[i] = {
+				name: item.name,
+				// y: data[data.length-1][1]
+				y: total
+			};
+
+			seriesOptions[i] = {
+				name: item.name,
+				data: data
+			};
+
+			// As we're loading the data asynchronously, we don't know what order it will arrive. So
+			// we keep a counter and create the chart when all the data is loaded.
+			seriesCounter++;
+
+			if (seriesCounter == items.length) {
+				createChart();
+				calcualteShares(pieSeries);
+			} 
+
+		});
+	});
+
+ 
+	// create the chart when all data is loaded
+	function createChart() {
+
+		chart = new Highcharts.StockChart({
+		    chart: {
+		        renderTo: 'container'
+		    },
+
+		    rangeSelector: {
+		        selected: 4
+		    },
+
+		    yAxis: {
+		    	labels: {
+		    		formatter: function() {
+		    			return (this.value > 0 ? '+' : '') + this.value + '%';
+		    		}
+		    	},
+		    	plotLines: [{
+		    		value: 0,
+		    		width: 2,
+		    		color: 'silver'
+		    	}]
+		    },
+		    
+		    plotOptions: {
+		     	series: {
+		     		compare: 'percent'
+		     	}
+		    },
+		    
+		    tooltip: {
+		    	pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+		    	valueDecimals: 2
+		    },
+		    
+		    series: seriesOptions
+		});
+	}
+
+	function calcualteShares(pieSeries) {
+	    var chart2 = new Highcharts.Chart({
+	            chart: {
+	                renderTo: 'container2',
+	                plotBackgroundColor: null,
+	                plotBorderWidth: null,
+	                plotShadow: false
+	            },
+	            title: {
+	                text: 'Share'
+	            },
+	            tooltip: {
+	        	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+	            	percentageDecimals: 1
+	            },
+	            plotOptions: {
+	                pie: {
+	                    allowPointSelect: true,
+	                    cursor: 'pointer',
+	                    dataLabels: {
+	                        enabled: true,
+	                        color: '#000000',
+	                        connectorColor: '#000000',
+	                        formatter: function() {
+	                            return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(1) +' %';
+	                        }
+	                    }
+	                }
+	            },
+	            series: [{
+	                type: 'pie',
+	                name: 'Share',
+	                data: pieSeries
+	            }]
+	    });
+	}	
+
+});
+ 
+$(function() { 
+        $('.venue-filter').multiselect({
+            buttonContainer: '<span class="dropdown" />',
+			buttonText: function(options) { 
+		        if (options.length == 0) {
+		          return $(options.context).data('title') + ' <b class="caret"></b>';
+		        }
+		        else if (options.length > 1) {
+		          return options.length + ' '+$(options.context).data('title')+' selected  <b class="caret"></b>';
+		        }
+		        else {
+		          var selected = $(options.context).data('title')+': ';
+		          options.each(function() {
+		            selected += $(this).text() + ', ';
+		          });
+		          return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
+		        }
+		    }            
+        });
+});
+
+</script>
+{% endblock %}
+

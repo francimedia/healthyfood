@@ -60,7 +60,7 @@ class Spider extends BaseSpider
 		$FoursquareClient = new \Foursquare\Client;
 
   		// get a setting of category IDs
-  		$categoryId = $this->getVenueCategoryIds('shops');
+  		$categoryId = $this->getVenueCategoryIds('healthy_food');
 
 		// get locations surrounding lat/lng geo point.
 		$locations = $FoursquareClient->get('searchLocation', $lat.','.$lng, $radius, 50, $categoryId, $query);
@@ -280,6 +280,19 @@ class Spider extends BaseSpider
 		$categories['sxsw_locations'][] = '5032792091d4c4b30a586d5c' ;
 		$categories['sxsw_locations'][] = '4bf58dd8d48988d1f1931735' ;
 		$categories['sxsw_locations'][] = '4bf58dd8d48988d1ed931735' ; 
+
+		// Grocery Store
+		$categories['healthy_food'][] = '4bf58dd8d48988d118951735' ; 
+		// Health Food Store
+		$categories['healthy_food'][] = '50aa9e744b90af0d42d5de0e' ; 
+		// Farmers Market
+		$categories['healthy_food'][] = '4bf58dd8d48988d1fa941735' ; 
+
+		// Butcher
+		// $categories['healthy_food'][] = '4bf58dd8d48988d11d951735' ; 
+
+		// Gourmet Shop
+		// $categories['healthy_food'][] = '4bf58dd8d48988d1f5941735' ; 
 		
   		return implode(',',$categories[$category]);
  	}

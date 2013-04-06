@@ -102,9 +102,13 @@ class Controller_Api extends \Controller_Rest
         $startdate = strtotime(\Input::get('start'));
         $enddate = strtotime(\Input::get('end'));
 
+    $startdate = strtotime('2013-03-07 00:00:00');
+        $enddate = strtotime('2013-03-20 00:00:00');
+  
         $colums = array();
         $colums[] = \DB::expr('MAX( value ) as v');
         $colums[] = 'object_id';
+ 
 
         switch($timespan) {
             case 'hour':
@@ -139,11 +143,10 @@ class Controller_Api extends \Controller_Rest
             }
 
             if($enddate) {
-                $query->where('created_at', '<=', date('Y-m-d H:i:s', $startdate));
+                $query->where('created_at', '<=', date('Y-m-d H:i:s', $enddate));
             }
 
-            $Results = $query->execute();            
-             
+            $Results = $query->execute();   
             // $response[$property] = array();
             $response  = array();
 
@@ -160,6 +163,26 @@ class Controller_Api extends \Controller_Rest
         return $this->response($response);
 
     }
+
+    public function get_pictures()   
+    { 
+          header('Access-Control-Allow-Origin: *'); 
+ 
+ 
+        $options = array();
+        $options['order_by'] = 'likes';
+        $options['order_dir'] = 'desc';
+        $options['filter'] = array();
+        $options['filter']['date_range'] = 'thisweek'; 
+  
+         // get pics
+        $options['per_page'] = 500;
+        $options['offset'] = 0; 
+        $data['pictures'] = \Collection\Interaction::search($options);
+ 
+        return $this->response($data);
+
+    } 
 
 /*
     {

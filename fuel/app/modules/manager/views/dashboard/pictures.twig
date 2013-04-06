@@ -1,0 +1,108 @@
+{% extends "layouts/manager.twig" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+
+{% endblock %}
+
+
+{% block content %}
+  
+
+  <fieldset>
+	{{ Form.open({'method': 'get'}) }}
+
+	<legend>Filter Venues</legend> 
+	<p>
+	    <div class="input-prepend input-append">
+	        <span class="add-on"><b class="icon-list-alt"></b></span>
+	        <select class="venue-filter" name="filter[regions][]" multiple="multiple" data-title="Collections">
+	            {% for region in regions %}
+	            <option value="{{ region.id }}" {% if region.id in Input.get('filter.regions') %}selected="selected"{% endif %}>
+	             	{{ region.name }}
+	            </option>
+	            {% endfor %} 
+	        </select>  
+	        {{ order_by }}
+	        {{ order_dir }}
+	        {{ date_range }} 
+	        {{ Form.input('filter[q]', Input.get('filter.q'), {'placeholder': 'Venue name', 'style': 'width: 130px'}) }}
+	        {{ Form.input('filter[caption]', Input.get('filter.caption'), {'placeholder': 'Caption', 'style': 'width: 130px'}) }}
+	        <button type="submit" class="btn btn-primary">Search</button>
+	    </div>
+	</p>
+
+	{{ Form.close() }}
+</fieldset>	
+
+
+ 
+{{ pagination }}  
+ 
+<ul class="thumbnails">
+{% for picture in pictures %}
+	  <li class="span2">
+
+	    <div class="thumbnail">
+	      <a href="{{ picture.link }}" target="_blank"><img src="{{ picture.image_1 }}" style="width: 200px;" alt="" /></a>
+	      <h3> 
+	      	{{ picture.time_created|date('Y/m/d') }} 
+	      </h3>
+	      <h4 style="height: 50px; overflow: auto">
+	      	{{ picture.name }}
+	      </h4>
+	      <p style="height: 100px; overflow: auto">
+	      	{{ picture.caption }}
+	      </p>
+	      <p style="font-size: 10px;">
+	      	<a href="{{ picture.link }}" target="_blank">{{ picture.link }}</a>
+	      </p>
+	      <p style="font-size: 10px;">
+	      	{{ picture.time_created|date('Y/m/d H:i a') }}  <br>
+	      	Likes: {{ picture.likes }} | 
+	      	Comments: {{ picture.comments }}
+	      </p> 
+	    </div> 
+	</li>
+
+{% endfor %}
+</ul>
+
+ 
+ 
+{{ pagination }}  
+  
+ 
+{% endblock %}
+    
+
+{% block scripts %} 
+    {{ parent() }}
+ 
+<script type="text/javascript">
+$(function() { 
+        $('.venue-filter').multiselect({
+            buttonContainer: '<span class="dropdown" />',
+			buttonText: function(options) { 
+		        if (options.length == 0) {
+		          return $(options.context).data('title') + ' <b class="caret"></b>';
+		        }
+		        else if (options.length > 1) {
+		          return options.length + ' '+$(options.context).data('title')+' selected  <b class="caret"></b>';
+		        }
+		        else {
+		          var selected = $(options.context).data('title')+': ';
+		          options.each(function() {
+		            selected += $(this).text() + ', ';
+		          });
+		          return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
+		        }
+		    }            
+        });
+});
+
+</script>
+{% endblock %}
