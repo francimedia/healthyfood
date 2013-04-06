@@ -3,14 +3,14 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 26, 2013 at 06:40 PM
+-- Generation Time: Apr 06, 2013 at 02:30 PM
 -- Server version: 5.5.9
 -- PHP Version: 5.3.6
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Database: `promoteme`
+-- Database: `healthyfood`
 --
 
 -- --------------------------------------------------------
