@@ -9,6 +9,10 @@ class Model_Venue_Meta_Foursquare extends \Orm\Model
 		'id',
 		'venue_foursquare_id',
 		'canonicalUrl',
+		'price_tier',
+		'price_message',
+		'menu_url',
+		'menu_type', 
 	);
 
 }
