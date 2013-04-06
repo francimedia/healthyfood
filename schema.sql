@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 06, 2013 at 02:30 PM
+-- Generation Time: Apr 06, 2013 at 02:51 PM
 -- Server version: 5.5.9
 -- PHP Version: 5.3.6
 
@@ -16,41 +16,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `event`
---
-
-CREATE TABLE `event` (
-  `id` int(12) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `starttime` timestamp NULL DEFAULT NULL,
-  `endtime` timestamp NULL DEFAULT NULL,
-  `desc` text,
-  `venue_id` int(12) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `venue_id` (`venue_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `event_meta_eventbrite`
---
-
-CREATE TABLE `event_meta_eventbrite` (
-  `id` int(12) NOT NULL,
-  `eventbrite_id` bigint(20) NOT NULL,
-  `logo` varchar(255) DEFAULT NULL,
-  `description` text,
-  `status` varchar(32) DEFAULT NULL COMMENT 'change this to enum later',
-  `organizer_name` varchar(255) DEFAULT NULL,
-  `organizer_url` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `eventbrite_id` (`eventbrite_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `group`
 --
 
@@ -58,7 +23,12 @@ CREATE TABLE `group` (
   `id` int(6) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `group`
+--
+
 
 -- --------------------------------------------------------
 
@@ -73,7 +43,12 @@ CREATE TABLE `group_object` (
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
   KEY `object_id` (`object_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+
+--
+-- Dumping data for table `group_object`
+--
+
 
 -- --------------------------------------------------------
 
@@ -84,12 +59,19 @@ CREATE TABLE `group_object` (
 CREATE TABLE `interaction` (
   `id` int(12) NOT NULL,
   `time_created` timestamp NULL DEFAULT NULL,
-  `location_id` int(12) DEFAULT NULL,
+  `venue_id` int(12) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
   `interaction_type` enum('picture','comment','like') NOT NULL,
   `source` enum('instagram','foursquare') NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `location_id` (`location_id`)
+  KEY `location_id` (`venue_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `interaction`
+--
+
 
 -- --------------------------------------------------------
 
@@ -104,6 +86,11 @@ CREATE TABLE `interaction_meta_common` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `interaction_meta_common`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -112,10 +99,15 @@ CREATE TABLE `interaction_meta_common` (
 
 CREATE TABLE `interaction_meta_foursquare` (
   `id` int(12) NOT NULL,
-  `user_id` int(12) NOT NULL,
+  `foursquare_user_id` int(12) NOT NULL,
   `username` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `interaction_meta_foursquare`
+--
+
 
 -- --------------------------------------------------------
 
@@ -125,8 +117,8 @@ CREATE TABLE `interaction_meta_foursquare` (
 
 CREATE TABLE `interaction_meta_instagram` (
   `id` int(12) NOT NULL,
-  `instagram_picture_id` varchar(48) NOT NULL,
-  `user_id` int(12) NOT NULL,
+  `interaction_instagram_id` varchar(48) NOT NULL,
+  `instagram_user_id` int(12) NOT NULL,
   `username` varchar(255) NOT NULL,
   `image_1` varchar(1000) DEFAULT NULL,
   `image_2` varchar(1000) DEFAULT NULL,
@@ -137,6 +129,11 @@ CREATE TABLE `interaction_meta_instagram` (
   `comments` int(12) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `interaction_meta_instagram`
+--
+
 
 -- --------------------------------------------------------
 
@@ -150,6 +147,50 @@ CREATE TABLE `interaction_meta_twitter` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `interaction_meta_twitter`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `keyword`
+--
+
+CREATE TABLE `keyword` (
+  `id` bigint(20) NOT NULL,
+  `value` varchar(48) NOT NULL,
+  `count` int(12) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `value` (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `keyword`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `keyword_venue`
+--
+
+CREATE TABLE `keyword_venue` (
+  `id` bigint(20) NOT NULL,
+  `venue_id` bigint(20) NOT NULL,
+  `keyword_id` bigint(20) NOT NULL,
+  `count` int(12) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `venue_keyword_id` (`venue_id`,`keyword_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `keyword_venue`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -158,18 +199,21 @@ CREATE TABLE `interaction_meta_twitter` (
 
 CREATE TABLE `record` (
   `id` int(15) NOT NULL AUTO_INCREMENT,
-  `record_hash` varchar(64) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `object_id` int(12) NOT NULL,
-  `property` enum('singleton','checkin','checkin-unique','like','comment','review','rating','photos','specials','herenow','mayor') NOT NULL,
+  `property` enum('singleton','checkin','checkin-unique','like','comment','review','rating','photos','specials','herenow','mayor','keyword') NOT NULL,
   `value` int(12) NOT NULL,
   `datatype` enum('absolute','relative') NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `record_hash` (`record_hash`),
   KEY `property` (`property`),
   KEY `object_id` (`object_id`),
   KEY `datatype` (`datatype`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1729887 ;
+
+--
+-- Dumping data for table `record`
+--
+
 
 -- --------------------------------------------------------
 
@@ -179,13 +223,18 @@ CREATE TABLE `record` (
 
 CREATE TABLE `singleton` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
-  `object_type` enum('interaction','venue','event','user') NOT NULL,
+  `object_type` enum('interaction','venue','keyword','keword_venue') NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `object_type` (`object_type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=80046 ;
+
+--
+-- Dumping data for table `singleton`
+--
+
 
 -- --------------------------------------------------------
 
@@ -205,6 +254,11 @@ CREATE TABLE `statistic` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+--
+-- Dumping data for table `statistic`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -219,7 +273,12 @@ CREATE TABLE `tracking_cycle` (
   PRIMARY KEY (`id`),
   KEY `object_id` (`object_id`),
   KEY `frequency` (`frequency`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15970 ;
+
+--
+-- Dumping data for table `tracking_cycle`
+--
+
 
 -- --------------------------------------------------------
 
@@ -237,7 +296,12 @@ CREATE TABLE `tracking_log` (
   PRIMARY KEY (`id`),
   KEY `is_latest` (`is_latest`),
   KEY `object_id` (`object_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=241133 ;
+
+--
+-- Dumping data for table `tracking_log`
+--
+
 
 -- --------------------------------------------------------
 
@@ -253,7 +317,12 @@ CREATE TABLE `tracking_log_ratelimit` (
   `response` text,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37034 ;
+
+--
+-- Dumping data for table `tracking_log_ratelimit`
+--
+
 
 -- --------------------------------------------------------
 
@@ -271,7 +340,12 @@ CREATE TABLE `tracking_point` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `region_id_idx` (`region_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1692 ;
+
+--
+-- Dumping data for table `tracking_point`
+--
+
 
 -- --------------------------------------------------------
 
@@ -286,7 +360,12 @@ CREATE TABLE `tracking_region` (
   `lng` decimal(13,10) NOT NULL,
   `radius` int(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+
+--
+-- Dumping data for table `tracking_region`
+--
+
 
 -- --------------------------------------------------------
 
@@ -301,7 +380,12 @@ CREATE TABLE `user` (
   `last_name` varchar(128) DEFAULT NULL,
   `picture_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72150 ;
+
+--
+-- Dumping data for table `user`
+--
+
 
 -- --------------------------------------------------------
 
@@ -318,6 +402,11 @@ CREATE TABLE `user_meta_eventbrite` (
   UNIQUE KEY `eventbrite_user_id` (`eventbrite_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `user_meta_eventbrite`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -330,8 +419,52 @@ CREATE TABLE `user_meta_facebook` (
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `eventbrite_user_id` (`facebook_user_id`)
+  UNIQUE KEY `facebook_user_id` (`facebook_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `user_meta_facebook`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_meta_foursquare`
+--
+
+CREATE TABLE `user_meta_foursquare` (
+  `id` bigint(20) NOT NULL,
+  `foursquare_user_id` bigint(20) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `foursquare_user_id` (`foursquare_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `user_meta_foursquare`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_meta_instagram`
+--
+
+CREATE TABLE `user_meta_instagram` (
+  `id` bigint(20) NOT NULL,
+  `instagram_user_id` bigint(20) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `instagram_user_id` (`instagram_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `user_meta_instagram`
+--
+
 
 -- --------------------------------------------------------
 
@@ -355,6 +488,11 @@ CREATE TABLE `venue` (
   KEY `lat` (`lat`,`lng`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `venue`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -366,6 +504,11 @@ CREATE TABLE `venue_meta_common` (
   `notes` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `venue_meta_common`
+--
+
 
 -- --------------------------------------------------------
 
@@ -381,6 +524,11 @@ CREATE TABLE `venue_meta_foursquare` (
   UNIQUE KEY `venue_foursquare_id` (`venue_foursquare_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `venue_meta_foursquare`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -395,6 +543,11 @@ CREATE TABLE `venue_meta_instagram` (
   UNIQUE KEY `venue_instagram_id` (`venue_instagram_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `venue_meta_instagram`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -406,6 +559,11 @@ CREATE TABLE `venue_meta_twitter` (
   `mentions` int(12) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `venue_meta_twitter`
+--
+
 
 -- --------------------------------------------------------
 
@@ -428,3 +586,8 @@ CREATE TABLE `venue_record` (
   `mayor` int(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `venue_record`
+--
+

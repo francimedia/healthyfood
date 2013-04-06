@@ -34,12 +34,38 @@ class Venue
 		return $response;
 	}
 
+	public static function saveInstagramVenueJsonToDB($venue, $system_venue_id) {
+		// skip this venue if it already exists
+		if(self::venueInstagramIdExists($venue->id)) {
+			return $venue->id;
+		}
+		// save instagram relevant data
+		self::createVenueMetaInstagram($system_venue_id, $venue);
+		return $venue->id;
+	}
+
     public static function getVenueByFoursquareId($venue_foursquare_id) { 
-		$entry = \Model_Venue_Meta_Foursquare::find(array($venue_foursquare_id, 'venue_foursquare_id'));
+    	return \Model_Venue_Meta_Foursquare::query()->where('venue_foursquare_id', $venue_foursquare_id)->limit(1)->get_one();
+    }
+
+    public static function getFoursquareVenueId($venue_id) { 
+		if ( $entry = \Model_Venue_Meta_Foursquare::find($venue_id) ) {
+			return $entry->venue_foursquare_id;
+		}
+    }
+
+    public static function getInstagramVenueId($venue_id) { 
+		if ( $entry = \Model_Venue_Meta_Instagram::find($venue_id) ) {
+			return $entry->venue_instagram_id;
+		}
     }
 
     public static function venueFoursquareIdExists($venue_foursquare_id) { 
     	return \Model_Venue_Meta_Foursquare::query()->where('venue_foursquare_id', $venue_foursquare_id)->limit(1)->count() > 0 ? true : false;
+    }
+
+    public static function venueInstagramIdExists($venue_instagram_id) { 
+    	return \Model_Venue_Meta_Instagram::query()->where('venue_instagram_id', $venue_instagram_id)->limit(1)->count() > 0 ? true : false;
     }
 
     public static function getOrCreateVenueRecord($system_venue_id) { 
@@ -77,6 +103,13 @@ class Venue
 		$VenueMetaFoursquare->venue_foursquare_id = $venue->id;
 		$VenueMetaFoursquare->canonicalUrl = $venue->canonicalUrl; 
 		$VenueMetaFoursquare->save();    	
+    }
+
+    public static function createVenueMetaInstagram($system_venue_id, $venue) {
+		$InstagramVenue = new \Model_Venue_Meta_Instagram();
+		$InstagramVenue->id = $system_venue_id;
+		$InstagramVenue->venue_instagram_id = $venue->id;
+		$InstagramVenue->save();	    	
     }
 
     public static function createVenueMetaCommon($system_venue_id, $venue) {
@@ -118,16 +151,18 @@ class Venue
 		foreach($stats as $property => $value) {
 			$time_key = date('Y_m_d_H');
 
+			/*
 			$record_hash = implode('_', array(
 				'4q',
 				$venue->id,
 				$property,
 				$time_key
 			));
+			*/
 
 			try {
 				$Record = new \Model_Record();
-				$Record->record_hash = $record_hash;
+				// $Record->record_hash = $record_hash;
 				$Record->object_id = $system_venue_id;  
 				$Record->property = $property;
 				$Record->value = $value; 
@@ -157,5 +192,57 @@ class Venue
 		return $stats;
 
     }	
+
+    public static function countSearchResults($options = array()) {
+    	return self::search($options, true);
+    }	
+
+    public static function search($options = array(), $count = false) {
+
+    	$columns = $count ? \DB::expr('COUNT(*) as count') : '*';
+
+    	$query = \DB::select($columns)->from('venue_record');	
+		$query->join('venue');
+		$query->on('venue.id', '=', 'venue_record.id');
+
+		// sorting options
+		$options['order_by'] = isset($options['order_by']) ?  $options['order_by'] : 'venue_record.checkin';
+		$options['order_dir'] = isset($options['order_dir']) ?  $options['order_dir'] : 'desc';
+		$query->order_by($options['order_by'], $options['order_dir']);
+
+		// filters
+		$options['filter'] = isset($options['filter']) ?  $options['filter'] : array();
+
+		foreach($options['filter'] as $filter_type => $filter) { 
+			switch ($filter_type) {
+				case 'regions':
+					$query->where('venue.region_id', 'IN', $filter); 
+					break;  
+				case 'q':
+					$query->where('venue.name', 'like', '%'.$filter.'%');
+					break;  
+			}
+
+		}
+ 
+		if($count) { 
+			$result = $query->execute();
+			$result_arr = $result->current();
+			return $result_arr['count']; 
+		}
+
+    	// set paging default options
+    	$options['per_page'] = isset($options['per_page']) ?  $options['per_page'] : 10;
+    	$options['offset'] = isset($options['offset']) ?  $options['offset'] : 0;
+ 
+		$query->limit($options['per_page']);
+		$query->offset($options['offset']);
+
+// print_r($query->execute());
+// exit;
+		return $query->as_object()->execute();
+
+
+    }
  
 }

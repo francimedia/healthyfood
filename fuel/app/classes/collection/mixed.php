@@ -14,7 +14,7 @@ class Mixed
 		$object_types = array();
 		$object_types['venue']['identifier'] = 'venue_foursquare_id';
 		$object_types['venue']['meta_table'] = 'venue_meta_foursquare';
-		$object_types['interaction']['identifier'] = 'instagram_picture_id';
+		$object_types['interaction']['identifier'] = 'interaction_instagram_id';
 		$object_types['interaction']['meta_table'] = 'interaction_meta_instagram';
 
 		$translated_ids = array();

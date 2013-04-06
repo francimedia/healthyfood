@@ -30,9 +30,7 @@ class Controller_Welcome extends Controller
 	 */
 	public function action_index()
 	{
-
-		$view = \View::forge('welcome/index.twig'); 
-		return \Response::forge($view);
+		return Response::forge(View::forge('welcome/index'));
 	}
 
 	/**

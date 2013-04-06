@@ -2,22 +2,13 @@
 
 class Model_Interaction_Meta_Common extends \Orm\Model
 {
+
+    protected static $_table_name = 'interaction_meta_common';
+
 	protected static $_properties = array(
 		'id',
 		'lat',
-		'lng',
-		'created_at',
-		'updated_at',
+		'lng'
 	);
-
-	protected static $_observers = array(
-		'Orm\Observer_CreatedAt' => array(
-			'events' => array('before_insert'),
-			'mysql_timestamp' => true,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_save'),
-			'mysql_timestamp' => true,
-		),
-	);
+	
 }

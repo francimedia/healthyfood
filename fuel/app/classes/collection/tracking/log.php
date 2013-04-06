@@ -10,7 +10,7 @@ class Tracking_Log
 
     // get items for scanning, oldest scan first.
 
-    public static function getQueuedItems($source, $frequency = 'hourly', $limit = 100) {
+    public static function getQueuedItems($source, $frequency = 'hourly', $limit = 100, $region_id = false) {
 
 		$query = \DB::select()->from(self::$_table_name);
 		
@@ -24,6 +24,12 @@ class Tracking_Log
 		$query->where('tracking_log.is_latest', 1);
 		$query->where('tracking_cycle.frequency', $frequency); 
 		$query->where('tracking_log.source', $source); 
+
+		if($region_id) {
+			$query->join('venue');
+			$query->on('venue.id', '=', 'singleton.id'); 
+			$query->where('venue.region_id', $region_id); 			
+		}
 
 		switch($frequency) {
 			case 'quaterday':				
@@ -46,7 +52,14 @@ class Tracking_Log
 				return;
 		}
 
-		$query->order_by('tracking_log.created_at', 'asc'); 
+		if(1) {
+			$query->join('venue_record');
+			$query->on('venue_record.id', '=', 'singleton.id'); 
+			$query->order_by('venue_record.checkin', 'desc'); 
+		} else {
+			$query->order_by('tracking_log.created_at', 'asc'); 	
+		}
+
 		$query->limit($limit); 
 		$tracking_logs = $query->execute();    	
 
@@ -55,7 +68,7 @@ class Tracking_Log
 
 		return $tracking_logs;
 
-    }
+    }  
 
     public static function getCurrentRateLimit($service = 'foursquare') {
    		if($Log_Ratelimit = \Model_Tracking_Log_Ratelimit::query()->where('service', $service)->where('limit', '!=', 0)->limit(1)->order_by('created_at', 'desc')->get_one() ) {

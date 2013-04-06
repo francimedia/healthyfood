@@ -1,5 +1,6 @@
 <?php
 
+
 class Model_Record extends \Orm\Model
 {
 
@@ -7,7 +8,7 @@ class Model_Record extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'record_hash', // this column should be removed later, but good for dev. phase to identify duplicate tracking etc.
+		// 'record_hash', // this column should be removed later, but good for dev. phase to identify duplicate tracking etc.
 		'object_id',
 		'property',
 		'value',
