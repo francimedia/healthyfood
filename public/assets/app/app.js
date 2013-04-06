@@ -1399,7 +1399,7 @@ App.Map = (function () {
         var markerLayer = mapbox.markers.layer();
         m.addLayer(markerLayer); 
 
-        getVenues(markerLayer, defaultLocation); 
+        // getVenues(markerLayer, defaultLocation); 
  
         getUserPosition(markerLayer);
 
