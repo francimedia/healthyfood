@@ -35,7 +35,7 @@ class Client
 
 	protected $apiCalls = array(
 		'searchLocation' => array(
-			'path' => '/locations/search',
+			'path' => 'locations/search',
 			'args' => array(				
 				'lat', 			// Latitude of the center search coordinate. If used, lng is required.		
 				'lng', 			// Longitude of the center search coordinate. If used, lat is required	
@@ -43,7 +43,7 @@ class Client
 			)
 		),
 		'getLocation' => array(
-			'path' => '/locations/search',
+			'path' => 'locations/search',
 			'args' => array(				
 				'foursquare_v2_id' 			// Returns a location mapped off of a foursquare v2 api location id. If used, you are not required to use lat and lng.
 			)

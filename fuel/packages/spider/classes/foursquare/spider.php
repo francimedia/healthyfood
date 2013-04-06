@@ -70,13 +70,20 @@ class Spider extends BaseSpider
 			if(!$response) {
 				// skip this venue if it already exists
 				$this->debugMessage('Venue already exists: '.$venue->name . ' / ' . $venue->id);
+				continue;
 			}
 			
 			$this->debugMessage($response['log']);
-
 			
 			// create a default "1 scan per hour" entry to the tracking cycle
-			\Collection\Tracking_Cylce::create($system_venue_id, 'hourly');			
+			// \Collection\Tracking_Cylce::create($response['system_venue_id'], 'hourly');			
+
+			$Cycle = new \Model_Tracking_Cycle();
+			$Cycle->object_id = $response['system_venue_id'];
+			$Cycle->frequency = 'hourly';
+			// 2do: manage timezone based tracking
+			// $Cycle->TZ = 'ET';
+			$Cycle->save();				
 
 			// if we didn't get back a stats array, an error occured
 			if(!is_array($response['stats'])) {
@@ -103,8 +110,9 @@ class Spider extends BaseSpider
 
     // try to update locations smart
     // at the moment just scan at random times, goal: track one location at a similar time. example: 01:00am-02:00am
-    public function updateLocations() {    	
+    public function updateVenues() {    	
 
+    	$locationsUpdated = 0;
     	$empty_responses = 0;
 
 		$FoursquareClient = new \Foursquare\Client;
@@ -115,6 +123,7 @@ class Spider extends BaseSpider
 			$this->cliOutput('wait', 300);
 		}		
 
+		// a bunch of foursquare location IDs
 		$groupedObjects = \Collection\Mixed::convertObjectIds($tracking_logs);
 
 		foreach($groupedObjects as $table => $groupedObjectIds) {
@@ -126,13 +135,11 @@ class Spider extends BaseSpider
 						$locations = $FoursquareClient->getVenueInfoBatch($venue_ids);
 
 						if(!isset($locations->response->responses[0]->meta->code) && $locations->response->responses[0]->meta->code == 403) {
-							Package::load('email');
 							$this->cliOutput('error', 'Failure: rate_limit_exceeded Quota exceeded');
 							return;
 						}
 
 						if(!isset($locations->response->responses)) {
-							Package::load('email');
 							$this->cliOutput('error', 'Warning: Empty response (1)');	
 							$empty_responses++;
 								if($empty_responses > 3) {
@@ -149,6 +156,7 @@ class Spider extends BaseSpider
 								if($empty_responses > 3) {
 									// print_r($venue);
 									// exit;
+									return false;
 								}
 								continue;
 							}
@@ -156,11 +164,11 @@ class Spider extends BaseSpider
 							if(!$system_venue_id) {
 								$this->cliOutput('error', 'Failure: Unable to get venue ID: ' .$venue->response->venue->id);	
 								$this->cliOutput('error', 'IDs: ' . print_r($groupedObjects));	
-								$empty_responses++;
-								if($empty_responses > 3) {
+								// $empty_responses++;
+								// if($empty_responses > 3) {
 									// print_r($venue);
 									// exit;
-								}
+								// }
 								continue;
 							}
 
@@ -172,7 +180,8 @@ class Spider extends BaseSpider
  							}
 
 							$this->debugMessage('Updated: '.$venue->response->venue->name . ' / ' . $venue->response->venue->id);
-							$this->debugMessage('Stats: '.implode(', ', $stats)); 							
+							$this->debugMessage('Stats: '.implode(', ', $stats)); 		
+							$locationsUpdated++;					
 						}
 					}
 					break;
@@ -182,37 +191,32 @@ class Spider extends BaseSpider
 			
 		}
 	 
+	 	$this->emailReport('Locations updated: '. $locationsUpdated);
+	 	return true;
 		// echo \DB::last_query();
 
 	}
 
-	private function reportError() {
+    public function emailReport($message) {
+        Package::load('email');        
 
-		return;
+        // Create an instance
+        $email = \Email::forge();
 
-		// Create an instance
-		$email = Email::forge();
+        // Set the from address
+        $email->from('report@fashiondashboard.net', 'FD Report');
 
-		// Set the from address
-		$email->from('my@email.me', 'My Name');
+        // Set the to address
+        $email->to('stephanalber@gmx.de', 'Stephan Alber');
 
-		// Set the to address
-		$email->to('receiver@elsewhere.co.uk', 'Johny Squid');
+        // Set a subject
+        $email->subject('Report: '.date('Y/m/d H:i')); 
 
-		// Set a subject
-		$email->subject('This is the subject');
+        // And set the body.
+        $email->body($message);
 
-		// Set multiple to addresses
+    }
 
-		$email->to(array(
-		    'example@mail.com',
-		    'another@mail.com' => 'With a Name',
-		));
-
-		// And set the body.
-		$email->body('This is my message');
-
-	}
 
 	public function calculateDeltas() {
 
@@ -250,7 +254,7 @@ class Spider extends BaseSpider
 
         	if($last_value != -1) {
 				$Record = new \Model_Record();
-				$Record->record_hash = $row['record_hash'].'r';  
+				// $Record->record_hash = $row['record_hash'].'r';  
 				$Record->object_id = $row['object_id'];   
 				$Record->property = $property;
 				$Record->value = $row['value'] - $last_value; 
@@ -280,6 +284,8 @@ class Spider extends BaseSpider
 		$categories['sxsw_locations'][] = '5032792091d4c4b30a586d5c' ;
 		$categories['sxsw_locations'][] = '4bf58dd8d48988d1f1931735' ;
 		$categories['sxsw_locations'][] = '4bf58dd8d48988d1ed931735' ; 
+		$categories['sxsw_locations'][] = '4bf58dd8d48988d171941735' ; 
+ 
 
 		// Grocery Store
 		$categories['healthy_food'][] = '4bf58dd8d48988d118951735' ; 
@@ -287,12 +293,20 @@ class Spider extends BaseSpider
 		$categories['healthy_food'][] = '50aa9e744b90af0d42d5de0e' ; 
 		// Farmers Market
 		$categories['healthy_food'][] = '4bf58dd8d48988d1fa941735' ; 
-
+ 
 		// Butcher
 		// $categories['healthy_food'][] = '4bf58dd8d48988d11d951735' ; 
-
+ 
 		// Gourmet Shop
 		// $categories['healthy_food'][] = '4bf58dd8d48988d1f5941735' ; 
+
+		$categories['science'][] = '4bf58dd8d48988d191941735' ;
+		$categories['science'][] = '4d4b7105d754a06372d81259' ;
+		$categories['science'][] = '4bf58dd8d48988d192941735' ;
+		$categories['science'][] = '4bf58dd8d48988d181941735' ;
+		$categories['science'][] = '4bf58dd8d48988d125941735' ;
+		$categories['science'][] = '4bf58dd8d48988d122951735' ;
+		
 		
   		return implode(',',$categories[$category]);
  	}
