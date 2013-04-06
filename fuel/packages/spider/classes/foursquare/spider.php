@@ -133,6 +133,8 @@ class Spider extends BaseSpider
 					$ids = array_chunk($groupedObjectIds, 5, true);
 					foreach($ids as $venue_ids) {
 						$locations = $FoursquareClient->getVenueInfoBatch($venue_ids);
+						// print_r($locations);
+						// exit;
 
 						if(!isset($locations->response->responses[0]->meta->code) && $locations->response->responses[0]->meta->code == 403) {
 							$this->cliOutput('error', 'Failure: rate_limit_exceeded Quota exceeded');
@@ -173,6 +175,7 @@ class Spider extends BaseSpider
 							}
 
  							$stats = \Collection\Venue::saveVenueStats($system_venue_id, $venue->response->venue, true);
+ 							\Collection\Venue::createOrUpdateVenueMetaFoursquare($system_venue_id, $venue->response->venue);
 
  							if(!is_array($stats)) {
  								$this->CliOutput('error', 'Failure: '.$stats);

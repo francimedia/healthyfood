@@ -23,7 +23,7 @@ class Venue
 		$response['log'] = 'Added new venue: '.$venue->name . ' / ' . $venue->id;
 
 		// save foursquare relevant data
-		self::createVenueMetaFoursquare($system_venue_id, $venue);
+		self::createOrUpdateVenueMetaFoursquare($system_venue_id, $venue);
 
 		// save general meta data for this venue			
 		self::createVenueMetaCommon($system_venue_id, $venue); 
@@ -97,9 +97,16 @@ class Venue
 		$BaseVenue->save();	    	
     }
 
-    public static function createVenueMetaFoursquare($system_venue_id, $venue) {
-		$VenueMetaFoursquare = new \Model_Venue_Meta_Foursquare();
-		$VenueMetaFoursquare->id = $system_venue_id;
+    public static function createOrUpdateVenueMetaFoursquare($system_venue_id, $venue) { 
+
+		$VenueMetaFoursquare = \Model_Venue_Meta_Foursquare::find($system_venue_id);
+
+		if(!$VenueMetaFoursquare) {
+			$VenueMetaFoursquare = new \Model_Venue_Record();
+			$VenueMetaFoursquare->id = $system_venue_id;  
+			$VenueMetaFoursquare->save();
+		} 
+ 
 		$VenueMetaFoursquare->venue_foursquare_id = $venue->id;
 		$VenueMetaFoursquare->canonicalUrl = $venue->canonicalUrl; 
 		
@@ -150,14 +157,15 @@ class Venue
 		);
 
 		if($extended) {
-			$stats['rating'] = isset($venue->rating) ? ($venue->rating * 100) : 0;
+			$stats['rating'] = isset($venue->rating) ? ($venue->rating * 100) : 0; 
+			$stats['price'] = isset($venue->price->tier) ? $venue->price->tier : 0; 
 			$stats['photos'] = $venue->photos->count;
 			$stats['specials'] = $venue->specials->count;
 			// $stats['herenow'] = $venue->hereNow->count;
 			$stats['mayor'] = $venue->mayor->count;
 		}
-
-		$VenueRecord = self::getOrCreateVenueRecord($system_venue_id); 
+		
+		$VenueRecord = self::getOrCreateVenueRecord($system_venue_id);  
 
 		foreach($stats as $property => $value) {
 			$time_key = date('Y_m_d_H');

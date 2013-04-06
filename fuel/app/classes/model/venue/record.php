@@ -17,6 +17,8 @@ class Model_Venue_Record extends \Orm\Model
 		'specials',
 		'herenow',
 		'mayor',
+		'rating',
+		'price',
 	);
  
 }
