@@ -6,32 +6,68 @@ namespace App;
 class Controller_Api extends \Controller_Rest
 {
 
-    public function get_events()
+    public function get_venues()
     {
-    	$text = \Input::get('query');
-    	$starttime = \Input::get('starttime');
-    	$endtime = \Input::get('endtime'); 
+        $lat = \Input::get('lat');
+        $lng = \Input::get('lng');
 
+        $radius = 0.1;
+        $distance = 100;
+    	 
     	// $colums
 
         $query = \DB::select_array();
-        $query->from('event');
-        $query->join('venue');
-		$query->on('event.venue_id', '=', 'venue.id');
+        $query->from('venue');
+        $query->select(
+            'name', 
+            \DB::expr('FORMAT(lat,10) as lat'), 
+            'lng', 
+            \DB::expr('IFNULL( ((ACOS(SIN('.$lat.' * PI() / 180) * '
+                .'SIN(lat * PI() / 180) + COS('.$lat.' * PI() / 180) '
+                .'* COS(lat * PI() / 180) * COS(('.$lng.' - lng)'
+                . ' * PI() / 180)) * 180 / PI()) * 60 * 1.1515) , 999999) as distance'), 
+            'rating'); 
+        
 
-        if($starttime) {
-            $query->where('starttime', '>=', date('Y-m-d H:i:s', $startdate));
+        // load foursquare info
+        $query->join('venue_meta_foursquare');
+        $query->on('venue.id', '=', 'venue_meta_foursquare.id');
+
+        // load foursquare info
+        $query->join('venue_record');
+        $query->on('venue.id', '=', 'venue_record.id'); 
+
+        $query->where('lat', 'between', array(($lat - $radius), ($lat + $radius)));
+        $query->where('lng', 'between', array(($lng - $radius), ($lng + $radius))); 
+        $query->having('distance', '<=', $distance);
+
+        $query->order_by('distance', 'asc'); 
+         
+
+        if($lat) {
+            //  $query->where('starttime', '>=', date('Y-m-d H:i:s', $startdate));
         }
 
-        if($endtime) {
-            $query->where('endtime', '<=', date('Y-m-d H:i:s', $startdate));
+        if($lng) {
+            // $query->where('endtime', '<=', date('Y-m-d H:i:s', $startdate));
         }
 
-        $Results = $query->execute();             
+        $query->limit(15);
+
+        $Results = $query->execute(); 
+        $results = $Results->as_array();
+
+        foreach ($results as $key => $row) {
+            $results[$key]['lat'] = (float)($row['lat']); 
+            $results[$key]['lng'] = (float)($row['lng']); 
+            $results[$key]['rating'] = (float)($row['rating']/100); 
+            $results[$key]['distance'] = (float)($row['distance']*1000*3.2808399); 
+        }
 
 		// $this->response->set_header('Content-Type', 'text/json; charset=utf-8');
-
-        return $this->response($Results->as_array());
+        
+ 
+        return $this->response($results);
 
     }    
 
