@@ -6,7 +6,7 @@
 return array(
 	'default' => array(
 		'connection'  => array(
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=healthyfood',
+			'dsn'        => 'mysql:host=213.239.213.25;dbname=healthyfood',
 			'username'   => 'healthyfood',
 			'password'   => 'MuUvLY7dPVS6XYDQ',
 			'charset'        => 'utf8',

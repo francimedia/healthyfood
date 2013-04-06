@@ -9,10 +9,10 @@ class Controller_Api extends \Controller_Rest
     public function get_venues()
     {
         $lat = \Input::get('lat');
-        $lng = \Input::get('lon'); // different names for JS and PHP: lon >> lng !!! 
+        $lng = \Input::get('lng') ? \Input::get('lng') : \Input::get('lon'); // different names for JS and PHP: lon >> lng !!! 
 
-        $radius = 0.1;
-        $distance = 100;
+        $radius = 0.5;
+        $distance = 500;
     	 
     	// $colums
 
@@ -21,7 +21,7 @@ class Controller_Api extends \Controller_Rest
         $query->select(
             'name', 
             'street',
-            \DB::expr('FORMAT(lat,10) as lat'), 
+            'lat', 
             'lng', 
             \DB::expr('IFNULL( ((ACOS(SIN('.$lat.' * PI() / 180) * '
                 .'SIN(lat * PI() / 180) + COS('.$lat.' * PI() / 180) '
@@ -56,6 +56,8 @@ class Controller_Api extends \Controller_Rest
         $query->limit(20);
 
         $Results = $query->execute(); 
+        // echo \DB::last_query(); 
+
         $results = $Results->as_array();
 
         foreach ($results as $key => $row) {
@@ -63,11 +65,10 @@ class Controller_Api extends \Controller_Rest
             $results[$key]['lon'] = (float)($row['lng']); 
             $results[$key]['rating'] = (float)($row['rating']/100); 
             $results[$key]['distance'] = intval(50*round($row['distance']*1000*3.2808399/50)); 
-        }
+        } 
 
 		// $this->response->set_header('Content-Type', 'text/json; charset=utf-8');
-        
- 
+
         return $this->response($results);
 
     }    
