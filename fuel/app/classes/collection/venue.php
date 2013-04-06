@@ -102,6 +102,17 @@ class Venue
 		$VenueMetaFoursquare->id = $system_venue_id;
 		$VenueMetaFoursquare->venue_foursquare_id = $venue->id;
 		$VenueMetaFoursquare->canonicalUrl = $venue->canonicalUrl; 
+		
+		if(isset($venue->price)) {
+			$VenueMetaFoursquare->price_tier = $venue->price->tier; 
+			$VenueMetaFoursquare->price_message = $venue->price->message; 
+		}
+
+		if(isset($venue->menu)) {
+			$VenueMetaFoursquare->menu_url = $venue->menu->url; 
+			$VenueMetaFoursquare->menu_type = $venue->menu->type; 
+		} 
+		
 		$VenueMetaFoursquare->save();    	
     }
 
