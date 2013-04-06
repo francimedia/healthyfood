@@ -102,13 +102,13 @@ class Venue
 		$VenueMetaFoursquare = \Model_Venue_Meta_Foursquare::find($system_venue_id);
 
 		if(!$VenueMetaFoursquare) {
-			$VenueMetaFoursquare = new \Model_Venue_Record();
+			$VenueMetaFoursquare = new \Model_Venue_Meta_Foursquare();
 			$VenueMetaFoursquare->id = $system_venue_id;  
+			$VenueMetaFoursquare->venue_foursquare_id = $venue->id;
+			$VenueMetaFoursquare->canonicalUrl = $venue->canonicalUrl; 
 			$VenueMetaFoursquare->save();
 		} 
  
-		$VenueMetaFoursquare->venue_foursquare_id = $venue->id;
-		$VenueMetaFoursquare->canonicalUrl = $venue->canonicalUrl; 
 		
 		if(isset($venue->price)) {
 			$VenueMetaFoursquare->price_tier = $venue->price->tier; 
@@ -119,6 +119,20 @@ class Venue
 			$VenueMetaFoursquare->menu_url = $venue->menu->url; 
 			$VenueMetaFoursquare->menu_type = $venue->menu->type; 
 		} 
+		
+		$VenueMetaFoursquare->save();    	
+    }
+
+    public static function createOrUpdateVenueMetaHealthyfood($system_venue_id, $price_score) { 
+
+		$VenueMetaFoursquare = \Model_Venue_Meta_Foursquare::find($system_venue_id);
+
+		if(!$VenueMetaFoursquare) {
+			$VenueMetaFoursquare = new \Model_Venue_Meta_Foursquare();
+			$VenueMetaFoursquare->id = $system_venue_id; 
+		} 
+
+		$VenueMetaFoursquare->price_score = $price_score; 
 		
 		$VenueMetaFoursquare->save();    	
     }

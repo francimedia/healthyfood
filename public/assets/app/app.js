@@ -1520,16 +1520,25 @@ App.Map = (function () {
                         'marker-symbol': makerId
                     } 
                 });
-                $$('#cal-today').append('<li class="accept"> \
+                var html = '<li class="accept"> \
                     <a href="#"> \
-                        <div class="right"> \
+                        <div class="right" style="text-align: right">'+venue.distance+'';
+
+                if(venue.save != 0) {
+                    html += '<br><span style="color: #f00;">SAVE: '+venue.save+'%</span>';
+                }
+                
+                html += '<!-- \
                             <span class="icon brand twitter-2"></span> \
                             <span class="icon brand facebook-2"></span> \
+                            --> \
                         </div> \
                         <strong>('+makerId+') '+venue.name+'</strong> \
-                        <small>'+venue.street+' / '+venue.distance+' feet</small> \
+                        <small>'+venue.street+'</small> \
                     </a> \
-                </li>');
+                </li>';
+
+                $$('#cal-today').append(html);
             });
             console.log(features);
             markerLayer.features(features);
