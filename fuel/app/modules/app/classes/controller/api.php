@@ -11,8 +11,8 @@ class Controller_Api extends \Controller_Rest
         $lat = \Input::get('lat');
         $lng = \Input::get('lng') ? \Input::get('lng') : \Input::get('lon'); // different names for JS and PHP: lon >> lng !!! 
 
-        $radius = 0.5;
-        $distance = 500;
+        $radius = 0.1;
+        $distance = 2;
     	 
     	// $colums
 
@@ -31,11 +31,11 @@ class Controller_Api extends \Controller_Rest
         
 
         // load foursquare info
-        $query->join('venue_meta_foursquare');
+        $query->join('venue_meta_foursquare','LEFT');
         $query->on('venue.id', '=', 'venue_meta_foursquare.id');
 
         // load foursquare info
-        $query->join('venue_record');
+        $query->join('venue_record','LEFT');
         $query->on('venue.id', '=', 'venue_record.id'); 
 
         $query->where('lat', 'between', array(($lat - $radius), ($lat + $radius)));
@@ -43,6 +43,7 @@ class Controller_Api extends \Controller_Rest
         $query->having('distance', '<=', $distance);
 
         $query->order_by('distance', 'asc'); 
+        $query->group_by('venue.id'); 
          
 
         if($lat) {

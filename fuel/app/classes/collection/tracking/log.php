@@ -52,19 +52,19 @@ class Tracking_Log
 				return;
 		}
 
-		if(1) {
+		if(0) {
 			$query->join('venue_record');
 			$query->on('venue_record.id', '=', 'singleton.id'); 
 			$query->order_by('venue_record.checkin', 'desc'); 
 		} else {
 			$query->order_by('tracking_log.created_at', 'asc'); 	
 		}
-
+ 
 		$query->limit($limit); 
 		$tracking_logs = $query->execute();    	
 
  		// echo \DB::last_query();
-		// exit;
+		//  exit;
 
 		return $tracking_logs;
 
