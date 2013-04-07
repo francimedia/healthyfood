@@ -2,7 +2,7 @@
 
 
 {% block calToday %}
-    <ul class="events-today"> 
+    <ul class="events-today">
 
     </ul>
 {% endblock %}
@@ -59,6 +59,13 @@
         <article class="active">
             <img src="/assets/images/sample1.png">
             <div class="form" style="padding: 20px;">
+                <h3 class="locationDetail store-title"></h3>
+                <b class="locationDetail store-location"></b>
+                <b>(<span class="locationDetail store-distance"></span>)</b>
+
+
+                <span class="price-response"></span>
+                <br/>
                 <label>What's the price for one apple?</label>
                 <select class="price single" name="price">
                     <option value="0">$ -</option>

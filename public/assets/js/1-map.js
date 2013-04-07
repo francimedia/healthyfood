@@ -219,7 +219,7 @@ App.Map = (function () {
 //                var mydata = venuesCache[id];
 
                 var html = '<li class="accept"> \
-                    <a href="#subpage" data-router="section" data-venueID="' + venue.id + '"> \
+                    <a href="#subpage" data-router="section" data-name="'+ venue.name +'" data-street="'+ venue.street +'" data-distance="'+ venue.distance +'" data-venueID="' + venue.id + '" > \
                         <div class="right" style="text-align: right">' + venue.distance + '';
 
                 if (venue.save != 0) {
@@ -241,7 +241,14 @@ App.Map = (function () {
 
 
             $$('.calendar-layout a').on('tap', function(){
-                App.Details.setVenueID( $$(this).data('venueID') );
+                var $this = $$(this);
+                var data = {
+                    name: $this.data('name'),
+                    street: $this.data('street'),
+                    distance: $this.data('distance'),
+                    venueID: $this.data('venueID')
+                };
+                App.Details.setVenueData(data);
             });
 
             markerLayer.features(features);
@@ -289,3 +296,7 @@ App.Map = (function () {
 
     return self;
 })();
+
+$$(function () {
+
+})

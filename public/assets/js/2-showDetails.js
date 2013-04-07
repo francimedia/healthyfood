@@ -2,12 +2,16 @@ App.Details = (function () {
     var self = {};
     self.data = {};
 
-    self.setVenueID = function(id){
-        self.data.venue_id = id;
+    self.setVenueData = function(data){
+        self.data.name = data.name;
+        self.data.street = data.street;
+        self.data.distance = data.distance;
+        self.data.venueID = data.venueID;
     };
 
     self.parseResponse = function(){
-        console.log('Price sent!');
+        var html = '<b>Thank you!</b>';
+        $$('.price-response').html(html);
     };
 
     return self;
@@ -17,17 +21,22 @@ $$(function () {
     var data = App.Details.data;
 
     var $price = $$('.price');
-    // Clear prices for fields onload
-    $price.val('');
 
 
-    $$('#subpage').on('load', function (e) {
+    Lungo.dom('#subpage').on('load', function(){
+        // Clear fields
+        $price.val('');
+        $$('.locationDetail').text('');
+        $$('.store-title').text(data.name);
+        $$('.store-location').text(data.street);
+        $$('.store-distance').text(data.distance);
 
-    });
+    })
 
     $$('#submit-price').on('tap', function () {
         // Add price for item
         data.price = $price.val();
+        console.log(data);
         Lungo.Service.post(App.config.priceURL, data, App.Details.parseResponse, "json")
     });
 
