@@ -230,7 +230,15 @@ App.Map = (function () {
 
                 $$('#cal-today').append(html);
             });
-            console.log(features);
+        
+            $$('#cal-today').append('<li class="accept"> \
+                    <a href="#"> \
+                        <div class="right" style="text-align: right"><img src="/assets/images/4sq_poweredby_16x16.png" alt="" /></div> \
+                        <small>Venue Data powered by</small> \
+                        <strong>Foursquare</strong> \
+                    </a> \
+                </li>'); 
+
             markerLayer.features(features);
             // addPullEvent();
         };
