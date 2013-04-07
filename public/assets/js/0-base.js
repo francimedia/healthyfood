@@ -6,7 +6,8 @@ var App = (function () {
     var self = {};
     // Global properties
     self.config = {
-        apiURL: '/api/'
+        apiURL: '/api/',
+        priceURL: '/app/api/price.json'
     };
     // Global selectors
     self.$ = {
