@@ -1602,17 +1602,12 @@ App.Map = (function () {
 
     return self;
 })();
-
-$$(function () {
-
-})
-
 App.Details = (function () {
     var self = {};
     self.data = {};
 
     self.setVenueID = function(id){
-        self.data.venueID = id;
+        self.data.venue_id = id;
     };
 
     self.parseResponse = function(){
