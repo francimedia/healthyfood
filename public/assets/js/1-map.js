@@ -219,7 +219,7 @@ App.Map = (function () {
 //                var mydata = venuesCache[id];
 
                 var html = '<li class="accept"> \
-                    <a href="#subpage" data-router="section"> \
+                    <a href="#subpage" data-router="section" data-venueID="' + venue.id + '"> \
                         <div class="right" style="text-align: right">' + venue.distance + '';
 
                 if (venue.save != 0) {
@@ -239,6 +239,10 @@ App.Map = (function () {
                 $$('#cal-today').append(html);
             });
 
+
+            $$('.calendar-layout a').on('tap', function(){
+                App.Details.setVenueID( $$(this).data('venueID') );
+            });
 
             markerLayer.features(features);
             // addPullEvent();
@@ -283,10 +287,9 @@ App.Map = (function () {
         })();
     };
 
-    self.showDetails = function (e) {
-        console.log(e.target);
-        console.log('event!!');
-    };
-
     return self;
 })();
+
+$$(function () {
+
+})
