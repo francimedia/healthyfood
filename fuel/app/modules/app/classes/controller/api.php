@@ -95,5 +95,64 @@ class Controller_Api extends \Controller_Rest
 
     }    
 
+    public function action_price() {
+        $_POST['venue_id'] = \Input::get('venue_id');
+        $_POST['price'] = \Input::get('price'); 
+        return $this->post_price();
+    }
+
+    public function post_price() {
+        $system_venue_id = \Input::post('venue_id');
+        $price = intval(\Input::post('price')); 
+    
+        if(!$price || !$system_venue_id) {
+            return $this->response(array(
+                'success' => false,
+                'error_message' => 'Please provide a value both for venue_id and price!'
+            ));
+        }
+
+        $Venue = \Model_Venue::find($system_venue_id);
+
+        if(!$Venue) {
+            return $this->response(array(
+                'success' => false,
+                'error_message' => 'Unkown venue / invalid venue_id!'
+            ));
+        } 
+
+
+        try {
+
+            $Record = new \Model_Record();
+            // $Record->record_hash = $record_hash;
+            $Record->object_id = $system_venue_id;  
+            $Record->property = 'price';
+            $Record->value = $price; 
+            $Record->datatype = 'absolute'; 
+            $Record->save(); 
+
+            if ( \Collection\Venue::calculateVenuePriceScore($system_venue_id) ) {
+                return $this->response(array(
+                    'success' => true
+                ));
+            }
+
+            return $this->response(array(
+                'success' => false,
+                'error_message' => 'Unkown error'
+            )); 
+
+        }
+        catch (\Database_Exception $err) {  
+            // catch error. normally there shouldn't be an error, but in the development phase it's possible to have incomplete data, so errors could occur at this place.                      
+            return $this->response(array(
+                'success' => false,
+                'error_message' => $err
+            ));
+        }
+
+    }
+
 
 }
