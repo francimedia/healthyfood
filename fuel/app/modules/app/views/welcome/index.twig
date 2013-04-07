@@ -15,7 +15,7 @@
 
 {% block calFull %}
     <ul>
-       
+
     </ul>
 {% endblock %}
 
@@ -33,7 +33,7 @@
         {% block navCalendar %}
             <section id="calendar-nav" class="cal-push">
                 <nav class="groupbar">
-                    <a href="#" id="calendarToday" data-content="cal-today" class="active">Today</a>
+                    <a href="#" id="calendarToday" data-content="cal-today" class="aStores">Today</a>
                     <a href="#" id="calendarTomorrow" data-content="cal-tomorrow">Tomorrow</a>
                     <a href="#" id="calendarFull" data-content="cal-full" class="icon calendar"></a>
                 </nav>
@@ -52,32 +52,61 @@
                     <li class="title centered app-name">
                         <h1>Healthy food</h1>
                     </li>
-                    <li>
-                        <div class="logo-bird"></div>
-                    </li>
                 </ul>
             </nav>
         </header>
 
         <article class="active">
-            <span class="event-date">Friday, March 22, 2013</span>
+            <img src="/assets/images/sample1.png">
+            <div class="form" style="padding: 20px;">
+                <label>What's the price for one apple?</label>
+                <select class="price single" name="price">
+                    <option value="0">$ -</option>
+                    <option value="10">$0.10</option>
+                    <option value="20">$0.20</option>
+                    <option value="30">$0.30</option>
+                    <option value="40">$0.40</option>
+                    <option value="50">$0.50</option>
+                    <option value="60">$0.60</option>
+                    <option value="70">$0.70</option>
+                    <option value="80">$0.80</option>
+                    <option value="90">$0.90</option>
+                    <option value="100">$1.00</option>
+                    <option value="110">$1.10</option>
+                    <option value="120">$1.20</option>
+                    <option value="130">$1.30</option>
+                    <option value="140">$1.40</option>
+                    <option value="150">$1.50</option>
+                </select>
 
-            <img src="/assets/images/event.png">
-            <div class="event-title">
-                <h1>Made in NOISE</h1>
+                <label>OR: What's the price for 1 LBS of apples?</label>
+                <select class="price per-pound" name="price_per_lbs">
+                    <option value="0">$ -</option>
+                    <option value="25">$0.25</option>
+                    <option value="50">$0.50</option>
+                    <option value="75">$0.75</option>
+                    <option value="100">$1.00</option>
+                    <option value="125">$1.25</option>
+                    <option value="150">$1.50</option>
+                    <option value="175">$1.75</option>
+                    <option value="200">$2.00</option>
+                    <option value="225">$2.25</option>
+                    <option value="250">$2.50</option>
+                    <option value="275">$2.75</option>
+                    <option value="300">$3.00</option>
+                    <option value="325">$3.25</option>
+                    <option value="350">$3.50</option>
+                    <option value="375">$3.75</option>
+                    <option value="400">$4.00</option>
+                </select>
+
+                <p>
+                    <em>The average apple weighs 150 grams, 0.3 pounds/lbs or 5 ounces</em>
+                </p>
+
+                <input type="submit" value="submit" id="submit-price">
             </div>
 
-            <small>22 West 21st street <span class="icon pushpin"></span></small>
-
-
-            <section id="event-nav">
-                <nav class="groupbar">
-                    <a href="#" class="active">Info</a>
-                    <a href="#" class="">RSVP</a>
-                    <a href="#" class="">Social Buzz</a>
-                    <a href="#" class="">Pictures</a>
-                </nav>
-            </section>
         </article>
 
         <footer class="main-footer">

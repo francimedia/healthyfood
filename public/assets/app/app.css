@@ -1394,6 +1394,11 @@ body {
   top: 0.5em;
   text-transform: uppercase;
 }
+.user-form {
+  background-color: #fff;
+  position: relative;
+  top: 20%;
+}
 .logo-bird {
   background: url('../images/sprite.png') no-repeat 5px -18px;
   width: 40px;

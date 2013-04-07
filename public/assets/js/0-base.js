@@ -1,22 +1,23 @@
 Lungo.init({
-    name:'example'
+    name: 'healthyfood'
 });
 
 var App = (function () {
     var self = {};
     // Global properties
     self.config = {
-        apiURL:'/api/'
+        apiURL: '/api/',
+        priceURL: '/app/api/price.json'
     };
     // Global selectors
     self.$ = {
-        map:$$('#map'),
-        mapOverlay:$$('#map-overlay'),
-        btnMapClose:$$('#map-close'),
-        navCalendar:$$('#calendar-nav a')
+        map: $$('#map'),
+        mapOverlay: $$('#map-overlay'),
+        btnMapClose: $$('#map-close'),
+        navCalendar: $$('#calendar-nav a')
     };
 
-    self.addSubpageLinks = function(){
+    self.addSubpageLinks = function () {
         var links = $$('.calendar-layout a');
         links.data('router', 'section');
         links.attr('href', '#subpage');
