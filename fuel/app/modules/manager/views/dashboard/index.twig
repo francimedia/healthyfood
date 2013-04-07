@@ -55,6 +55,7 @@
 <table class="table table-hover">
     {% for venue in venues %}
         <tr>
+        	<td>{{ venue.id }}</td>
         	<th>{{ venue.name|e }}</th>
 
         	<td>{{ venue.street }}</td> 
@@ -72,8 +73,8 @@
 				</div>
 			</td>		
 			<td>
-				<a class="btn btn-small btn-primary" href="<?php echo site_url('dashboard/chart/location/'.$location->f_venue_id); ?>">Show report</a>
-				<a class="btn btn-small" href="<?php echo site_url('dashboard/instagramlocation/'.$location->f_venue_id); ?>">Recent pictures</a> 
+				<a class="btn btn-small btn-primary" href="/dashboard/chart/location/{{ venue.id }}">Show report</a>
+				<a class="btn btn-small" href="/dashboard/instagramlocation/{{ venue.id }}">Recent pictures</a> 
 			</td>
 
 

@@ -1351,7 +1351,7 @@ App.Map = (function () {
                                 m.center({
                                     lat: userPosition.coords.latitude,
                                     lon: userPosition.coords.longitude
-                                }).zoom(13);
+                                }).zoom(14);
                             }
 
                         }
@@ -1366,7 +1366,7 @@ App.Map = (function () {
                         height: '52%', duration: 200
                         // , bezier: [[100, 200], [200, 100]]
                         , complete: function () {
-                            m.setSize({x: 320, y: 120}).zoom(11);
+                            m.setSize({x: 320, y: 120}).zoom(13);
                             toggle(false);
                         }
                     });
@@ -1391,7 +1391,7 @@ App.Map = (function () {
             lon: -73.99498
         };
 
-        m = mapbox.map('map').zoom(9).center(defaultLocation);
+        m = mapbox.map('map').zoom(11).center(defaultLocation);
         m.addLayer(mapbox.layer().id('examples.map-4l7djmvo'));
 
 
@@ -1426,7 +1426,7 @@ App.Map = (function () {
                 userPosition = position;
                 // Once we've got a position, zoom and center the map
                 // on it, add ad a single feature
-                m.zoom(11).center({
+                m.zoom(13).center({
                     lat: position.coords.latitude,
                     lon: position.coords.longitude
                 });
@@ -1507,6 +1507,8 @@ App.Map = (function () {
                 // console.log(index);
                 // console.log(venue);
                 var makerId = index < 9 ? index+1 : markerSymbols[index];
+                var markerColor = venue.save != 0 ? '#ff762c' : '#8aa924';
+
                 features.push({
                     geometry: {
                         coordinates: [
@@ -1516,7 +1518,7 @@ App.Map = (function () {
                     },
                     properties: {
                         'marker-size': 'small',
-                        'marker-color': '#8aa924',
+                        'marker-color': markerColor,
                         'marker-symbol': makerId
                     } 
                 });
@@ -1525,7 +1527,7 @@ App.Map = (function () {
                         <div class="right" style="text-align: right">'+venue.distance+'';
 
                 if(venue.save != 0) {
-                    html += '<br><span style="color: #f00;">SAVE: '+venue.save+'%</span>';
+                    html += '<br><span style="color: #ff762c;">SAVE: '+venue.save+'%</span>';
                 }
                 
                 html += '<!-- \
