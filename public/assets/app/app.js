@@ -1602,3 +1602,7 @@ App.Map = (function () {
 
     return self;
 })();
+
+App.Details = (function(){
+
+});
