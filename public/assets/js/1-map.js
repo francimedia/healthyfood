@@ -289,7 +289,3 @@ App.Map = (function () {
 
     return self;
 })();
-
-$$(function () {
-
-})
