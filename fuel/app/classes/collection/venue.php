@@ -125,16 +125,34 @@ class Venue
 
     public static function createOrUpdateVenueMetaHealthyfood($system_venue_id, $price_score) { 
 
-		$VenueMetaFoursquare = \Model_Venue_Meta_Foursquare::find($system_venue_id);
+		$VenueMetaHealthyFood = \Model_Venue_Meta_Healthyfood::find($system_venue_id);
 
-		if(!$VenueMetaFoursquare) {
-			$VenueMetaFoursquare = new \Model_Venue_Meta_Foursquare();
-			$VenueMetaFoursquare->id = $system_venue_id; 
+		if(!$VenueMetaHealthyFood) {
+			$VenueMetaHealthyFood = new \Model_Venue_Meta_Healthyfood();
+			$VenueMetaHealthyFood->id = $system_venue_id; 
 		} 
 
-		$VenueMetaFoursquare->price_score = $price_score; 
+		$VenueMetaHealthyFood->price_score = $price_score; 
 		
-		$VenueMetaFoursquare->save();    	
+		$VenueMetaHealthyFood->save();    	
+    }
+
+    public static function calculateVenuePriceScore($system_venue_id) { 
+
+        $query = \DB::select_array();
+        $query->from('record');
+        $query->select(\DB::expr('AVG(value) as price_score'));
+
+        $query->where('property', 'price');
+        $query->where('object_id', $system_venue_id); 
+ 
+        $result = $query->execute()->as_array();
+
+        if(isset($result[0]['price_score'])) {
+			self::createOrUpdateVenueMetaHealthyfood($system_venue_id, $result[0]['price_score']);
+			return true;
+		}
+
     }
 
     public static function createVenueMetaInstagram($system_venue_id, $venue) {
