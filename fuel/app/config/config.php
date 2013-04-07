@@ -31,5 +31,5 @@ return array(
 	        'parser'
 	    ),
 	),	
-	'profiling'  => true,
+	'profiling'  => false
 );
