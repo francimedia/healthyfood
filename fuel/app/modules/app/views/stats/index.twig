@@ -1,0 +1,22 @@
+{% extends "layouts/stats.twig" %}
+
+{% block title %}Index{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+
+{% endblock %}
+
+
+{% block content %}
+  
+ <script id='cartodb-1365370296658' src='http://franci.cartodb.com/tables/venues_snapshot/embed_map.js?title=false&description=true&search=false&shareable=true&cartodb_logo=true&scrollwheel=true&sql=&sw_lat=40.24179856487036&sw_lon=-75.179443359375&ne_lat=41.21998578493921&ne_lon=-72.542724609375&height=700&id=cartodb-1365370296658'></script>  
+
+<script id='cartodb-1365370899258' src='http://franci.cartodb.com/tables/venue_6/embed_map.js?title=false&description=true&search=false&shareable=true&cartodb_logo=true&scrollwheel=true&sql=&sw_lat=40.46575594018434&sw_lon=-74.62188720703125&ne_lat=40.95501133048619&ne_lon=-73.30352783203125&height=400&id=cartodb-1365370899258'></script>
+ 
+{% endblock %}
+
+{% block scripts %} 
+    {{ parent() }}
+{% endblock %}
