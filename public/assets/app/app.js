@@ -1549,7 +1549,7 @@ App.Map = (function () {
                         <small>Venue Data powered by</small> \
                         <strong>Foursquare</strong> \
                     </a> \
-                </li><li>&nbsp;</li>'); 
+                </li>'); 
 
             markerLayer.features(features);
             // addPullEvent();
