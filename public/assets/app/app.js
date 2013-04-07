@@ -1275,7 +1275,8 @@ var App = (function () {
     var self = {};
     // Global properties
     self.config = {
-        apiURL: '/api/'
+        apiURL: '/api/',
+        priceURL: '/app/api/price.json'
     };
     // Global selectors
     self.$ = {
@@ -1531,7 +1532,7 @@ App.Map = (function () {
 //                var mydata = venuesCache[id];
 
                 var html = '<li class="accept"> \
-                    <a href="#subpage" data-router="section"> \
+                    <a href="#subpage" data-router="section" data-venueID="' + venue.id + '"> \
                         <div class="right" style="text-align: right">' + venue.distance + '';
 
                 if (venue.save != 0) {
@@ -1551,6 +1552,10 @@ App.Map = (function () {
                 $$('#cal-today').append(html);
             });
 
+
+            $$('.calendar-layout a').on('tap', function(){
+                App.Details.setVenueID( $$(this).data('venueID') );
+            });
 
             markerLayer.features(features);
             // addPullEvent();
@@ -1595,14 +1600,39 @@ App.Map = (function () {
         })();
     };
 
-    self.showDetails = function (e) {
-        console.log(e.target);
-        console.log('event!!');
+    return self;
+})();
+
+$$(function () {
+
+})
+
+App.Details = (function () {
+    var self = {};
+    self.data = {};
+
+    self.setVenueID = function(id){
+        self.data.venueID = id;
+    };
+
+    self.parseResponse = function(){
+        console.log('Price sent!');
     };
 
     return self;
 })();
 
-App.Details = (function(){
+$$(function () {
+    // Shortcut
+    var data = App.Details.data;
+    $$('#subpage').on('load', function (e) {
 
+    });
+
+    $$('#submit-price').on('tap', function () {
+        // Add price for item
+        data.price = $$('.price').val();
+        console.log(data);
+        Lungo.Service.post(App.config.priceURL, data, App.Details.parseResponse, "json")
+    });
 });
