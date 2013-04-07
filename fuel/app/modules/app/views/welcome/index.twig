@@ -56,18 +56,20 @@
             </nav>
         </header>
 
-        <article class="active">
+        <article class="active scroll">
             <img src="/assets/images/sample1.png">
             <div class="form" style="padding: 20px;">
                 <h3 class="locationDetail store-title"></h3>
                 <b class="locationDetail store-location"></b>
                 <b>(<span class="locationDetail store-distance"></span>)</b>
 
-
+                <br><br>
+                <h3 class="locationDetail user-action">Please help us filling our "BIG APPLE INDEX"</h3>
+                    
                 <span class="price-response"></span>
                 <br/>
-                <label>What's the price for one apple?</label>
-                <select class="price single" name="price">
+                <label style="font-weight: bold; color: #333">What's the price for one apple?</label>
+                <select class="price single" name="price" style="margin-top: 7px">
                     <option value="0">$ -</option>
                     <option value="10">$0.10</option>
                     <option value="20">$0.20</option>
@@ -86,8 +88,8 @@
                     <option value="150">$1.50</option>
                 </select>
 
-                <label>OR: What's the price for 1 LBS of apples?</label>
-                <select class="price per-pound" name="price_per_lbs">
+                <label>OR: What's the price for 1 LBS of apples?</label> 
+                <select class="price per-pound" name="price_per_lbs" style="margin-top: 7px">
                     <option value="0">$ -</option>
                     <option value="25">$0.25</option>
                     <option value="50">$0.50</option>
@@ -110,8 +112,10 @@
                 <p>
                     <em>The average apple weighs 150 grams, 0.3 pounds/lbs or 5 ounces</em>
                 </p>
+                <br>
 
-                <input type="submit" value="submit" id="submit-price">
+                <input type="submit" class="button" value="submit" id="submit-price">
+                <br><br><br>
             </div>
 
         </article>
