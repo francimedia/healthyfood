@@ -1,3 +1,5 @@
+var venuesCache = [];
+
 App.Map = (function () {
     var self = {},
         $map = App.$.map,
@@ -75,7 +77,7 @@ App.Map = (function () {
 
     function startMap() {
         var defaultLocation = {
-            lat: 40.73269, 
+            lat: 40.73269,
             lon: -73.99498
         };
 
@@ -85,10 +87,10 @@ App.Map = (function () {
 
         // Create an empty markers layer
         var markerLayer = mapbox.markers.layer();
-        m.addLayer(markerLayer); 
+        m.addLayer(markerLayer);
 
         // getVenues(markerLayer, defaultLocation); 
- 
+
         getUserPosition(markerLayer);
 
         // This uses the HTML5 geolocation API, which is available on
@@ -109,7 +111,7 @@ App.Map = (function () {
 
     function getUserPosition(markerLayer) {
         navigator.geolocation.getCurrentPosition(
-            function (position) {   
+            function (position) {
 
                 userPosition = position;
                 // Once we've got a position, zoom and center the map
@@ -120,7 +122,7 @@ App.Map = (function () {
                 });
 
                 var userMarkerLayer = mapbox.markers.layer();
-                m.addLayer(userMarkerLayer); 
+                m.addLayer(userMarkerLayer);
 
                 userMarkerLayer.add_feature({
                     geometry: {
@@ -137,10 +139,10 @@ App.Map = (function () {
 
                 var tmpLocation = {
                     lon: position.coords.longitude,
-                    lat: position.coords.latitude 
+                    lat: position.coords.latitude
                 };
 
-                getVenues(markerLayer, tmpLocation); 
+                getVenues(markerLayer, tmpLocation);
 
                 // And hide the geolocation button 
                 geolocate.parentNode.removeChild(geolocate);
@@ -149,7 +151,7 @@ App.Map = (function () {
                 // If the user chooses not to allow their location
                 // to be shared, display an error message.
                 geolocate.innerHTML = 'position could not be found';
-            });        
+            });
     }
 
     function addPullEvent() {
@@ -157,11 +159,11 @@ App.Map = (function () {
             onPull: "Pull down to refresh",      //Text on pulling
             onRelease: "Release to get new data",//Text on releasing
             onRefresh: "Refreshing...",          //Text on refreshing
-            callback: function() {               //Action on refresh
+            callback: function () {               //Action on refresh
                 // alert("Pull & Refresh completed!");
                 pull_example.hide();
             }
-        });        
+        });
     }
 
     function getVenues(markerLayer, userLocation) {
@@ -183,61 +185,60 @@ App.Map = (function () {
             17: 'i',
             18: 'j',
             19: 'k',
-            20: 'l',
+            20: 'l'
         };
 
-        var parseResponse = function(result){
-            //Do something
+        var parseResponse = function (result) {
+            venuesCache = [];
             // console.log(result);
             $$('#cal-today').html('<ul class="events-today"></ul>');
             var features = [];
-            $$.each(result, function(index,venue){
+            $$.each(result, function (index, venue) {
+
+                venuesCache[venue.id] = venue;
+
                 // console.log(index);
                 // console.log(venue);
-                var makerId = index < 9 ? index+1 : markerSymbols[index];
+                var makerId = index < 9 ? index + 1 : markerSymbols[index];
                 var markerColor = venue.save != 0 ? '#ff762c' : '#8aa924';
 
                 features.push({
                     geometry: {
                         coordinates: [
                             venue.lon,
-                            venue.lat 
+                            venue.lat
                         ]
                     },
                     properties: {
                         'marker-size': 'small',
                         'marker-color': markerColor,
                         'marker-symbol': makerId
-                    } 
+                    }
                 });
-                var html = '<li class="accept"> \
-                    <a href="#"> \
-                        <div class="right" style="text-align: right">'+venue.distance+'';
 
-                if(venue.save != 0) {
-                    html += '<br><span style="color: #ff762c;">SAVE: '+venue.save+'%</span>';
+//                var mydata = venuesCache[id];
+
+                var html = '<li class="accept"> \
+                    <a href="#subpage" data-router="section"> \
+                        <div class="right" style="text-align: right">' + venue.distance + '';
+
+                if (venue.save != 0) {
+                    html += '<br><span style="color: #ff762c;">SAVE: ' + venue.save + '%</span>';
                 }
-                
+
                 html += '<!-- \
                             <span class="icon brand twitter-2"></span> \
                             <span class="icon brand facebook-2"></span> \
                             --> \
                         </div> \
-                        <strong>('+makerId+') '+venue.name+'</strong> \
-                        <small>'+venue.street+'</small> \
+                        <strong>(' + makerId + ') ' + venue.name + '</strong> \
+                        <small>' + venue.street + '</small> \
                     </a> \
                 </li>';
 
                 $$('#cal-today').append(html);
             });
-        
-            $$('#cal-today').append('<li class="accept"> \
-                    <a href="#"> \
-                        <div class="right" style="text-align: right"><img src="/assets/images/4sq_poweredby_16x16.png" alt="" /></div> \
-                        <small>Venue Data powered by</small> \
-                        <strong>Foursquare</strong> \
-                    </a> \
-                </li>'); 
+
 
             markerLayer.features(features);
             // addPullEvent();
@@ -282,7 +283,10 @@ App.Map = (function () {
         })();
     };
 
+    self.showDetails = function (e) {
+        console.log(e.target);
+        console.log('event!!');
+    };
+
     return self;
 })();
-
-
