@@ -1506,7 +1506,7 @@ App.Map = (function () {
             // console.log(result);
             $$('#cal-today').html('<ul class="events-today"></ul>');
             var features = [];
-            $$.each(result, function (index, venue) {
+            $$.each(result.response.venues, function (index, venue) {
 
                 venuesCache[venue.id] = venue;
 
@@ -1551,6 +1551,14 @@ App.Map = (function () {
 
                 $$('#cal-today').append(html);
             });
+
+            $$('#cal-today').append('<li class="accept"> \
+                <a href="#"> \
+                    <div class="right" style="text-align: right"><img src="/assets/images/4sq_poweredby_16x16.png" alt="" /></div> \
+                    <small>Venue Data powered by</small> \
+                    <strong>Foursquare</strong> \
+                </a> \
+            </li><li>&nbsp;</li>'); 
 
 
             $$('.calendar-layout a').on('tap', function(){
