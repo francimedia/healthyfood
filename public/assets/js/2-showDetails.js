@@ -9,9 +9,8 @@ App.Details = (function () {
         self.data.venue_id = data.venueID;
     };
 
-    self.parseResponse = function () {
-        var html = '<b>Thank you!</b>';
-        $$('.price-response').html(html);
+    self.parseResponse = function () { 
+        Lungo.Notification.show('Thank you!', 'check', 2);
     };
 
     return self;
@@ -27,28 +26,33 @@ $$(function () {
         $$('.store-title').text(data.name);
         $$('.store-location').text(data.street);
         $$('.store-distance').text(data.distance);
+ 
+        $$('#submit-price').on('tap', function () {
+            submitPriceForm();
+        });
 
-    })
-
-    $$('#submit-price').on('tap', function () {
-        var price = $$('.per-pound').val() ? $$('.per-pound').val() : $$('.single').val();
-        var sendData = {
-            venue_id: data.venue_id,
-            price: price
-        }
-        console.log(sendData);
-        Lungo.Service.post(App.config.priceURL, sendData, App.Details.parseResponse, "json")
+        // Use only one price when sending
+        $price.on('change', function () {
+            if ($$(this).hasClass('per-pound')) {
+                $$('.single').val('');
+            }
+            if ($$(this).hasClass('single')) {
+                $$('.per-pound').val('');
+            }
+        });
     });
-
-    // Use only one price when sending
-    $price.on('change', function () {
-        if ($$(this).hasClass('per-pound')) {
-            $$('.single').val('');
-        }
-        if ($$(this).hasClass('single')) {
-            $$('.per-pound').val('');
-        }
-    })
-
-
 });
+
+function submitPriceForm() {
+    var price = $$('.notification .per-pound').val() != 0 ? $$('.notification .per-pound').val() : $$('.notification .single').val();
+    if(price == 0) {
+        alert('Please provide a price!');
+        return;
+    }
+    var sendData = {
+        venue_id: App.Details.data.venue_id,
+        price: price
+    }
+    console.log(sendData);
+    Lungo.Service.post(App.config.priceURL, sendData, App.Details.parseResponse, "json");   
+}

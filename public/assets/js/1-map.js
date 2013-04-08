@@ -249,6 +249,7 @@ App.Map = (function () {
 
 
             $$('.calendar-layout a').on('tap', function(){
+
                 var $this = $$(this);
                 var data = {
                     name: $this.data('name'),
@@ -256,7 +257,23 @@ App.Map = (function () {
                     distance: $this.data('distance'),
                     venueID: $this.data('venueID')
                 };
+
+                // was this venue already rated?
+                var ratedVenues = Lungo.Data.Storage.session("ratedVenues");
+                console.log(ratedVenues);
+
+                if(ratedVenues == null) {
+                    ratedVenues = [];
+                }
+
+                if(typeof ratedVenues[data.venueID] == 'undefined' || ratedVenues[data.venueID] != 1) {
+                    Lungo.Notification.html($$('#price-form').html(), "Don't know");    
+                    ratedVenues[data.venueID] = 1;
+                    Lungo.Data.Storage.session("ratedVenues", ratedVenues);
+                }
+
                 App.Details.setVenueData(data);
+                
             });
 
             markerLayer.features(features);
