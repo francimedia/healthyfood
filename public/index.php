@@ -10,6 +10,8 @@
  * @link       http://fuelphp.com
  */
 
+header('Access-Control-Allow-Origin: *');  
+
 /**
  * Set error reporting and display errors settings.  You will want to change these when in production.
  */
