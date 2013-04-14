@@ -6,16 +6,14 @@ module.exports = function (grunt) {
         // Metadata.
         pkg:grunt.file.readJSON('package.json'),
         files:{
-            'srcCSS':[baseDir + 'css/_libs.css', baseDir + 'css/base.less', baseDir + 'css/*.less'],
+            'srcCSS':[baseDir + 'css/global.less'],
             'destCSS':[baseDir + 'app/app.css', baseDir + 'css/_custom.css'],
 
             'srcJS':[
-                baseDir + 'js/lib/quo.debug.js',
-                baseDir + 'js/lib/lungo.js',
-                baseDir + 'js/lib/moment.min.js',
                 baseDir + 'js/lib/mapbox.js',
-                baseDir + 'js/lib/morpheus.min.js',
-                baseDir + 'js/*.js'],
+                baseDir + 'js/lib/jquery-1.9.1.min.js',
+                baseDir + 'js/lib/jquery.hammer.min.js',
+                baseDir + 'js/swipe.js'],
             'destJS':baseDir + 'app/app.js'
         },
         concat:{
@@ -33,17 +31,12 @@ module.exports = function (grunt) {
             }
         },
         less:{
-            dev:{
-                files:{
-                    '<%= files.destCSS[1] %>':'<%= files.srcCSS[1] %>'
-                }
-            },
             prod:{
                 options:{
                     yuicompress:true
                 },
                 files:{
-                    '<%= files.destCSS[1] %>':'<%= files.srcCSS[1] %>'
+                    '<%= files.destCSS[1] %>':'<%= files.srcCSS %>'
                 }
             }
         },
@@ -55,7 +48,7 @@ module.exports = function (grunt) {
         },
         watch:{
             dev:{
-                files:['<%= files.srcCSS[2] %>', '<%= files.srcJS %>'],
+                files:['<%= files.srcCSS %>', '<%= files.srcJS %>'],
                 tasks:['compileCSS', 'concat:distJS']
             }
         }
@@ -67,7 +60,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
 
-    grunt.registerTask('compileCSS', ['concat:libCSS', 'less:dev', 'concat:distCSS']);
+    grunt.registerTask('compileCSS', ['concat:libCSS', 'less', 'concat:distCSS']);
     grunt.registerTask('compile', ['compileCSS', 'concat:distJS']);
 
     grunt.registerTask('default', ['compile', 'watch:dev']);

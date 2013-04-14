@@ -13,12 +13,16 @@
 
     {% endblock %}
     <link href='http://fonts.googleapis.com/css?family=Puritan:400,700' rel='stylesheet' type='text/css'>
+     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="all" href="assets/app/app.css"/>
+    <script src="assets/js/lib/modernizr.js"></script>
 </head>
-<body class="app">
-{#{% Calendar section for displaying events + map %}#}
-<section id="home" class="active">
-    <header class="main-header">
+
+
+
+<section class="main-container">
+     <!-- <div id="debug">Log</div>
+    <header>
         <nav class="">
             <ul>
                 <li><a href="#aside-menu" data-router="aside" data-icon="menu"></a></li>
@@ -27,55 +31,33 @@
                 </li>
             </ul>
         </nav>
-    </header>
+    </header> -->
 
-    <article id="calendar-view" class="active">
-        {% block map endblock %}
-        <div class="calendar-layout cal-push list scroll">
-            <div id="cal-today" class="current">
-                {% block calToday endblock %}
-            </div>
-            <div id="cal-tomorrow">
-                {% block calTomorrow endblock %}
-            </div>
-            <div id="cal-full">
-                {% block calFull endblock %}
-            </div>
-        </div>
-    </article>
-    <footer class="main-footer">
+    <div id="carousel">
+        <ul>
+            <li class="pane1"><h2>Swipe...</h2></li>
+            <li class="pane2"><h2>...or drag...</h2></li>
+            <li class="pane3"><h2>...or swipe...</h2></li>
+            <li class="pane4"><h2>..or drag...</h2></li>
+            <li class="pane5"><h2>Dit is het einde!</h2></li>
+        </ul>
+    </div>
+    <footer>
         <nav>
-            <a href="#home" class="active" data-icon="home" data-router="section"></a>
-            <a href="#home" id="link-profile" data-icon="users" data-router="section"></a>
-            <a href="#home" data-icon="search" data-router="section"></a>
-            <a href="#home" data-router="section" class="logo-text"></a>
+            <ul>
+                <li><a href="#home" class="active" data-icon="home" data-router="section">1</a></li>
+                <li><a href="#home" id="link-profile" data-icon="users" data-router="section">2</a></li>
+                <li><a href="#home" data-icon="search" data-router="section">3</a></li>
+                <li><a href="#home" data-router="section" class="logo-text">4</a></li>
+            </ul>
         </nav>
     </footer>
 </section>
 
 
 
-{% block subpage endblock %}
 
-<aside id="aside-menu">
-    <header data-title="Menu"></header>
-    <article class="active list scroll">
-        <ul>
-            <li>
-                <strong>Settings</strong>
-            </li>
-            <li>
-                <strong>Coupons</strong>
-            </li>
-            <li>
-                <strong>Favorites</strong>
-            </li>
-            <li>
-                <strong>Contact</strong>
-            </li>
-        </ul>
-    </article>
-</aside>
-{% block scripts endblock %}
+
+<script src="assets/app/app.js?v=1"></script>
 </body>
 </html> 
