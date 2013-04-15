@@ -6,8 +6,8 @@ module.exports = function (grunt) {
         // Metadata.
         pkg:grunt.file.readJSON('package.json'),
         files:{
-            'srcCSS':[baseDir + 'css/global.less'],
-            'destCSS':[baseDir + 'app/app.css', baseDir + 'css/_custom.css'],
+            'srcCSS': baseDir + 'css/global.less',
+            'destCSS': baseDir + 'app/app.css',
 
             'srcJS':[
                 baseDir + 'js/lib/mapbox.js',
@@ -22,8 +22,8 @@ module.exports = function (grunt) {
                 dest:'<%= files.destJS %>'
             },
             distCSS:{
-                'src':['<%= files.srcCSS[0] %>', '<%= files.destCSS[1] %>'],
-                'dest':'<%= files.destCSS[0] %>'
+                'src':['<%= files.srcCSS %>', '<%= files.destCSS %>'],
+                'dest':'<%= files.destCSS %>'
             },
             libCSS:{
                 src:baseDir + 'css/lib/*.css',
@@ -33,10 +33,10 @@ module.exports = function (grunt) {
         less:{
             prod:{
                 options:{
-                    yuicompress:true
+                    yuicompress: false
                 },
                 files:{
-                    '<%= files.destCSS[1] %>':'<%= files.srcCSS %>'
+                    '<%= files.destCSS %>':'<%= files.srcCSS %>'
                 }
             }
         },
@@ -49,7 +49,7 @@ module.exports = function (grunt) {
         watch:{
             dev:{
                 files:['<%= files.srcCSS %>', '<%= files.srcJS %>'],
-                tasks:['compileCSS', 'concat:distJS']
+                tasks:['compile']
             }
         }
     });
@@ -60,8 +60,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
 
-    grunt.registerTask('compileCSS', ['concat:libCSS', 'less', 'concat:distCSS']);
-    grunt.registerTask('compile', ['compileCSS', 'concat:distJS']);
+    grunt.registerTask('compile', ['less', 'concat:distJS']);
 
-    grunt.registerTask('default', ['compile', 'watch:dev']);
+    grunt.registerTask('default', ['less', 'watch:dev']);
 };
