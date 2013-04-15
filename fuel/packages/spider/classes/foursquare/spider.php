@@ -11,18 +11,24 @@ use Fuel\Core\Cache as Cache;
 
 class Spider extends BaseSpider
 { 
+
+	public $active_category = 'healthy_food';
  
 	public function __construct() {
 		parent::__construct();
 	}
 
 
-    public function scanRegion($region_id)
+    public function scanRegion($region_id, $category = false)
     { 
 	   	if(!$region_id) {
     		// die('Please provide region id');
     		return false;
     	}
+
+    	if($category) {
+    		$this->active_category = $category;
+    	}    	
  
     	$Region = \Model_Tracking_Region::find($region_id);
     	
@@ -60,11 +66,19 @@ class Spider extends BaseSpider
 		$FoursquareClient = new \Foursquare\Client;
 
   		// get a setting of category IDs
-  		$categoryId = $this->getVenueCategoryIds('healthy_food');
+  		$categoryId = $this->getVenueCategoryIds($this->active_category);
+  		
+  		if(!$categoryId) {
+  			return false;
+  		}
 
 		// get locations surrounding lat/lng geo point.
 		$locations = $FoursquareClient->get('searchLocation', $lat.','.$lng, $radius, 50, $categoryId, $query);
 
+		if(!isset($locations->response)) {
+			return;
+		}
+		
 		foreach ($locations->response->venues as $key => $venue) {
 			$response = \Collection\Venue::saveVenueJsonToDB($venue, $region_id);
 			if(!$response) {
@@ -309,6 +323,11 @@ class Spider extends BaseSpider
 		$categories['science'][] = '4bf58dd8d48988d181941735' ;
 		$categories['science'][] = '4bf58dd8d48988d125941735' ;
 		$categories['science'][] = '4bf58dd8d48988d122951735' ;
+		
+		// Home (private)
+		$categories['private_homes'][] = '4bf58dd8d48988d103941735' ;
+		// Residential Building (Apartment / Condo)
+		$categories['private_homes'][] = '4d954b06a243a5684965b473' ;
 		
 		
   		return implode(',',$categories[$category]);

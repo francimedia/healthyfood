@@ -50,8 +50,7 @@ class Client
 			'args' => array(				
 				'id', 			// 
 			)
-		),
-
+		)
 
 	); 
 
@@ -114,6 +113,21 @@ class Client
 		$query['requests'] = implode(',', $requests);
 
 		return $this->runRequest('multi', $query);
+	}
+
+	public function getVenueMapping($lat,$lon,$venue_name) 
+	{
+
+		$query = array();
+		$query['client_id'] = Config::get('foursquare_client_id');
+		$query['client_secret'] = Config::get('foursquare_client_secret');
+ 		$query['v'] = date('Ymd');
+
+ 		$query['intent'] = 'match';
+ 		$query['ll'] = $lat.','.$lon;
+ 		$query['query'] = $venue_name;
+
+		return $this->runRequest('venues/search', $query);
 	}
 
 	private function runRequest($path, $args = array()) {

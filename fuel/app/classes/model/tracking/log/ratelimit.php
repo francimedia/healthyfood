@@ -28,6 +28,10 @@ class Model_Tracking_Log_Ratelimit extends \Orm\Model
 
 		$headers = $this->http_parse_headers($data['headers']);
 
+		if(!isset($headers['X-Ratelimit-Limit'])) {
+			return;
+		}
+		
 		$this->limit = $headers['X-Ratelimit-Limit']; 
 		$this->remaining = $headers['X-Ratelimit-Remaining'];  
 		$this->response = $data['headers']; 

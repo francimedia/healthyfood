@@ -17,6 +17,7 @@ Autoloader::add_classes(array(
 
 	'Spider\\Foursquare\\Client'                    => __DIR__.'/classes/foursquare/client.php',
 	'Spider\\Foursquare\\Spider'                    => __DIR__.'/classes/foursquare/spider.php',
+	'Spider\\Foursquare\\SnapSpider'                    => __DIR__.'/classes/foursquare/snapspider.php',
 
 	'Spider\\Instagram\\Client'                    => __DIR__.'/classes/instagram/client.php',
 	'Spider\\Instagram\\Spider'                    => __DIR__.'/classes/instagram/spider.php',

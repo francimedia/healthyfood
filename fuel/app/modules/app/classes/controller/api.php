@@ -221,6 +221,61 @@ class Controller_Api extends \Controller_Rest
         }
 
     }
+ 
+    public function get_geo_export()
+    {
+
+   
+        $query = \DB::select_array();
+        $query->from('venue');
+
+        $query->select(  
+            \DB::expr('venue.id as cartodb_id'),
+            // 'name', 
+            // 'street',
+            // 'postalCode',
+            // 'city',
+            'lat', 
+            'lng',             
+            'checkin'
+        );
+
+        // load foursquare info
+        $query->join('venue_record');
+        $query->on('venue.id', '=', 'venue_record.id'); 
+
+        $query->where('region_id', '=', 13);
+
+        $Results = $query->execute(); 
+        // echo \DB::last_query(); 
+
+        $results = $Results->as_array();
+ 
+
+        $data = array();
+        $data['type'] = 'FeatureCollection';
+        $data['features'] = array();
+
+        foreach ($results as $key => $row) {
+            $_row = $row;
+            unset($_row['lng']); 
+            unset($_row['lat']);
+            // unset($_row['name']);
+            // unset($_row['street']);
+            $data['features'][$key] = array(
+                'type' => 'Feature',
+                'properties' => $_row,
+                'geometry' => array(
+                    'type' => 'Point',
+                    'coordinates' => array((float)($row['lng']),(float)($row['lat']))
+                )
+            );
+        }   
+
+        return $this->response($data);
+ 
+
+    }
 
 
 }

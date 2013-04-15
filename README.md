@@ -15,7 +15,10 @@
 
 * Make single venue scan (100 venues): php oil refine spider::foursquare_venues:updateVenues
 * Start daemon for constant scanning: php oil refine spider::foursquare_venues:updateVenuesService
-* Execute scans for region X: php oil refine spider::foursquare_venues X (X = region ID)
+
+* Execute scans for region X: php oil refine spider::foursquare_venues ID (ID = region ID)
+* Execute scans for region X: php oil refine spider::foursquare_venues ID CATEGORY (ID = region ID, CATEGORY = category namespace)
+
 
 * Start daemon for updating instagram pictures: php oil refine spider::instagram_pictures  X (X = region ID)
 

@@ -15,9 +15,9 @@ class Foursquare_venues
 		$this->spider->setCli(true);
 	}
 
-    public function run($region_id)
+    public function run($region_id, $category = false)
     { 
-	   	if ($this->spider->scanRegion($region_id)) {
+	   	if ($this->spider->scanRegion($region_id, $category)) {
 	   		\Cli::write('Scan finished.');	
 	   	} else {
 	   		\Cli::error('No region found / Invalid region id');	
@@ -66,5 +66,15 @@ class Foursquare_venues
     public function addTrackingPoints($region_id) {
     	$this->spider->addTrackingPoints($region_id);
     } 
+
+    public function snap()
+    { 
+ 
+        Package::load('Spider'); 
+        $SnapSpider = new \Spider\Foursquare\SnapSpider;
+        $SnapSpider->setCli(true);
+        $SnapSpider->run();
+
+    }
  
 }
