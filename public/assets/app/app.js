@@ -9359,4 +9359,4 @@ $('.nav a').on('click', function(e){
 	self.addClass('active');
 });
 
-HFApp = new Backbone.Marionette.Application();
+HF = new Backbone.Marionette.Application();
