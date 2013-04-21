@@ -6,14 +6,18 @@ module.exports = function (grunt) {
         // Metadata.
         pkg:grunt.file.readJSON('package.json'),
         files:{
-            'srcCSS': baseDir + 'css/global.less',
+            'srcCSS': baseDir + 'css/base.less',
             'destCSS': baseDir + 'app/app.css',
-
             'srcJS':[
                 baseDir + 'js/lib/mapbox.js',
                 baseDir + 'js/lib/jquery-1.9.1.min.js',
                 baseDir + 'js/lib/jquery.hammer.min.js',
-                baseDir + 'js/swipe.js'],
+                baseDir + 'js/lib/lodash.js',
+                baseDir + 'js/lib/backbone.js',
+                baseDir + 'js/lib/backbone.marionette.js',
+                baseDir + 'js/swipe.js',
+                baseDir + 'js/app.js'
+                ],
             'destJS':baseDir + 'app/app.js'
         },
         concat:{
@@ -62,5 +66,5 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile', ['less', 'concat:distJS']);
 
-    grunt.registerTask('default', ['less', 'watch:dev']);
+    grunt.registerTask('default', ['compile', 'watch:dev']);
 };
