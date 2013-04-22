@@ -9,3 +9,14 @@ $('.nav a').on('click', function(e){
 });
 
 HF = new Backbone.Marionette.Application();
+
+HF
+
+// Initializer receives any options we send to our application when we call its “start” 
+MyApp.addInitializer(function(options) {
+  // Initialize a CompositeView using the collection passed in (options)
+  var AppView = new View({
+    collection: options.cats
+  });
+  MyApp.mainRegion.show(angryCatsView);
+});

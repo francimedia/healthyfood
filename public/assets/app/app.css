@@ -6698,6 +6698,7 @@ footer {
   bottom: 0;
   height: 10%;
   color: #fff;
+  position: fixed;
 }
 .nav a {
   display: inline-block;
