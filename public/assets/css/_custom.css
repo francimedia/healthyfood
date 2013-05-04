@@ -711,6 +711,7 @@ body {
   height: 66%;
   border-top: 1px solid #053879;
   width: 100%;
+  background-color: #fff;
 }
 .calendar-layout.mapOpened {
   top: 210px;
