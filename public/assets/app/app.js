@@ -1520,14 +1520,11 @@ App.Map = (function() {
             $$('#cal-today').html('<ul class="events-today"></ul>');
             var features = [];
             $$.each(result.response.venues, function(index, venue) {
-
                 venuesCache[venue.id] = venue;
-
                 // console.log(index);
                 // console.log(venue);
                 var makerId = index < 9 ? index + 1 : markerSymbols[index];
                 var markerColor = venue.save != 0 ? '#ff762c' : '#8aa924';
-
                 features.push({
                     geometry: {
                         coordinates: [
@@ -1541,7 +1538,7 @@ App.Map = (function() {
                     }
                 });
 
-                //                var mydata = venuesCache[id];
+                // var mydata = venuesCache[id];
 
                 var html = '<li class="accept"> \
                     <a href="#subpage" data-router="section" data-name="' + venue.name + '" data-street="' + venue.street + '" data-distance="' + venue.distance + '" data-venueID="' + venue.id + '" > \
@@ -1561,7 +1558,8 @@ App.Map = (function() {
                     </a> \
                 </li>';
 
-                $$('#cal-today').append(html);
+                // $$('#cal-today').append(html);
+                $$('.events-today').append(html);
             });
 
             $$('#cal-today').append('<li class="accept"> \
