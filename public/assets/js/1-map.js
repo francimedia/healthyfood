@@ -33,12 +33,11 @@ App.Map = (function() {
                     toggle(true);
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '420px',
+                        height: '450px',
                         duration: 150
                         // , bezier: [[100, 200], [200, 100]]
                         ,
                         complete: function() {
-
                             if (userPosition) {
                                 m.setSize({
                                     x: 320,
@@ -49,7 +48,6 @@ App.Map = (function() {
                                     lon: userPosition.coords.longitude
                                 }).zoom(14);
                             }
-
                         }
                     });
 
@@ -59,7 +57,7 @@ App.Map = (function() {
                 if (isOpen) {
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '52%',
+                        height: '66%',
                         duration: 200
                         // , bezier: [[100, 200], [200, 100]]
                         ,

@@ -1346,12 +1346,11 @@ App.Map = (function() {
                     toggle(true);
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '420px',
+                        height: '450px',
                         duration: 150
                         // , bezier: [[100, 200], [200, 100]]
                         ,
                         complete: function() {
-
                             if (userPosition) {
                                 m.setSize({
                                     x: 320,
@@ -1362,7 +1361,6 @@ App.Map = (function() {
                                     lon: userPosition.coords.longitude
                                 }).zoom(14);
                             }
-
                         }
                     });
 
@@ -1372,7 +1370,7 @@ App.Map = (function() {
                 if (isOpen) {
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '52%',
+                        height: '66%',
                         duration: 200
                         // , bezier: [[100, 200], [200, 100]]
                         ,
@@ -1548,27 +1546,16 @@ App.Map = (function() {
                     html += '<br><span style="color: #ff762c;">SAVE: ' + venue.save + '%</span>';
                 }
 
-                html += '<!-- \
-                            <span class="icon brand twitter-2"></span> \
-                            <span class="icon brand facebook-2"></span> \
-                            --> \
-                        </div> \
+                html += '</div> \
                         <strong>(' + makerId + ') ' + venue.name + '</strong> \
                         <small>' + venue.street + '</small> \
                     </a> \
                 </li>';
 
-                // $$('#cal-today').append(html);
                 $$('.events-today').append(html);
             });
 
-            $$('#cal-today').append('<li class="accept"> \
-                <a href="#"> \
-                    <div class="right" style="text-align: right"><img src="/assets/images/4sq_poweredby_16x16.png" alt="" /></div> \
-                    <small>Venue Data powered by</small> \
-                    <strong>Foursquare</strong> \
-                </a> \
-            </li><li>&nbsp;</li>');
+          
 
 
             $$('.calendar-layout a').on('tap', function() {

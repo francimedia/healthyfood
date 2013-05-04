@@ -1370,10 +1370,11 @@ body {
   border-left: 1px solid #fff;
 }
 .calendar-layout {
-  position: relative;
-  top: 150px;
-  height: 65%;
+  position: absolute;
+  bottom: 0;
+  height: 66%;
   border-top: 1px solid #053879;
+  width: 100%;
 }
 .calendar-layout.mapOpened {
   top: 210px;
