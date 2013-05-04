@@ -64,7 +64,7 @@ App.Map = (function() {
                         complete: function() {
                             m.setSize({
                                 x: 320,
-                                y: 150
+                                y: 148
                             }).zoom(13);
                             toggle(false);
                         }
@@ -264,7 +264,7 @@ App.Map = (function() {
                 }
 
                 if (typeof ratedVenues[data.venueID] == 'undefined' || ratedVenues[data.venueID] != 1) {
-                    Lungo.Notification.html($$('#price-form').html(), "Don't know");
+                    Lungo.Notification.html($$('#price-form').html(), "See Venue");
                     ratedVenues[data.venueID] = 1;
                     Lungo.Data.Storage.session("ratedVenues", ratedVenues);
                 }

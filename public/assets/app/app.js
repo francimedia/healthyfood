@@ -1377,7 +1377,7 @@ App.Map = (function() {
                         complete: function() {
                             m.setSize({
                                 x: 320,
-                                y: 150
+                                y: 148
                             }).zoom(13);
                             toggle(false);
                         }
@@ -1516,7 +1516,6 @@ App.Map = (function() {
             venuesCache = [];
             // console.log(result);
             $$('#cal-today').html('<ul class="events-today"></ul>');
-            var $venues = $$('.events-today');
             var features = [];
             $$.each(result.response.venues, function(index, venue) {
                 venuesCache[venue.id] = venue;
@@ -1553,11 +1552,8 @@ App.Map = (function() {
                     </a> \
                 </li>';
 
-                $venues.append(html);
+                $$('.events-today').append(html);
             });
-
-            // Append foursquare source:
-            $venues.append('<li><div class="right" style="text-align: right"><img src="/assets/images/4sq_poweredby_16x16.png" alt="" /></div><small>Venue Data powered by</small><strong>Foursquare</strong></li>');
 
           
 
@@ -1581,7 +1577,7 @@ App.Map = (function() {
                 }
 
                 if (typeof ratedVenues[data.venueID] == 'undefined' || ratedVenues[data.venueID] != 1) {
-                    Lungo.Notification.html($$('#price-form').html(), "See venue");
+                    Lungo.Notification.html($$('#price-form').html(), "See Venue");
                     ratedVenues[data.venueID] = 1;
                     Lungo.Data.Storage.session("ratedVenues", ratedVenues);
                 }
