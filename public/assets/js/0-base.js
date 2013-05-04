@@ -40,4 +40,18 @@ $$(function () {
     // Bind menu for map calendar nav
     App.$.navCalendar.on('tap', App.Map.menu);
 
+
+    // Set venue list height based on window height
+    var headerHeight = 44,
+        mapHeight = 148,
+        offset = headerHeight + mapHeight;
+
+    var body = document.body,
+        html = document.documentElement;
+    var winHeight = Math.max( body.scrollHeight, body.offsetHeight, 
+                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+    $$('.calendar-layout ').css('height', (winHeight - offset) + 'px');
+    // console.log(winHeight);
+
 });
