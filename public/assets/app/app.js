@@ -1577,7 +1577,7 @@ App.Map = (function() {
                 }
 
                 if (typeof ratedVenues[data.venueID] == 'undefined' || ratedVenues[data.venueID] != 1) {
-                    Lungo.Notification.html($$('#price-form').html(), "Don't know");
+                    Lungo.Notification.html($$('#price-form').html(), "See venue");
                     ratedVenues[data.venueID] = 1;
                     Lungo.Data.Storage.session("ratedVenues", ratedVenues);
                 }
