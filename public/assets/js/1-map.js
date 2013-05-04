@@ -1,8 +1,8 @@
 var venuesCache = [];
 
-App.Map = (function () {
+App.Map = (function() {
     var self = {},
-        $map = App.$.map,
+    $map = App.$.map,
         $overlay = App.$.mapOverlay,
         $btnCloseMap = App.$.btnMapClose;
 
@@ -14,6 +14,7 @@ App.Map = (function () {
     /* Open/close the map
      * @param {String} action Accepts 'open' or 'close'
      * */
+
     function shutter(action) {
         if (typeof action !== 'string') {
             return;
@@ -32,12 +33,17 @@ App.Map = (function () {
                     toggle(true);
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '420px', duration: 150
+                        height: '420px',
+                        duration: 150
                         // , bezier: [[100, 200], [200, 100]]
-                        , complete: function () {
+                        ,
+                        complete: function() {
 
                             if (userPosition) {
-                                m.setSize({x: 320, y: 420});
+                                m.setSize({
+                                    x: 320,
+                                    y: 420
+                                });
                                 m.center({
                                     lat: userPosition.coords.latitude,
                                     lon: userPosition.coords.longitude
@@ -53,10 +59,15 @@ App.Map = (function () {
                 if (isOpen) {
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '52%', duration: 200
+                        height: '52%',
+                        duration: 200
                         // , bezier: [[100, 200], [200, 100]]
-                        , complete: function () {
-                            m.setSize({x: 320, y: 120}).zoom(13);
+                        ,
+                        complete: function() {
+                            m.setSize({
+                                x: 320,
+                                y: 150
+                            }).zoom(13);
                             toggle(false);
                         }
                     });
@@ -68,10 +79,10 @@ App.Map = (function () {
         }
     }
 
-    self.open = function () {
+    self.open = function() {
         shutter('open');
     };
-    self.close = function () {
+    self.close = function() {
         shutter('close');
     };
 
@@ -101,7 +112,7 @@ App.Map = (function () {
         if (!navigator.geolocation) {
             geolocate.innerHTML = 'geolocation is not available';
         } else {
-            geolocate.onclick = function (e) {
+            geolocate.onclick = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 getUserPosition(markerLayer);
@@ -111,55 +122,57 @@ App.Map = (function () {
 
     function getUserPosition(markerLayer) {
         navigator.geolocation.getCurrentPosition(
-            function (position) {
 
-                userPosition = position;
-                // Once we've got a position, zoom and center the map
-                // on it, add ad a single feature
-                m.zoom(13).center({
-                    lat: position.coords.latitude,
-                    lon: position.coords.longitude
-                });
+        function(position) {
 
-                var userMarkerLayer = mapbox.markers.layer();
-                m.addLayer(userMarkerLayer);
-
-                userMarkerLayer.add_feature({
-                    geometry: {
-                        coordinates: [
-                            position.coords.longitude,
-                            position.coords.latitude]
-                    },
-                    properties: {
-                        'marker-size': 'small',
-                        'marker-color': '#4079ff',
-                        'marker-symbol': 'circle',
-                    }
-                });
-
-                var tmpLocation = {
-                    lon: position.coords.longitude,
-                    lat: position.coords.latitude
-                };
-
-                getVenues(markerLayer, tmpLocation);
-
-                // And hide the geolocation button 
-                geolocate.parentNode.removeChild(geolocate);
-            },
-            function (err) {
-                // If the user chooses not to allow their location
-                // to be shared, display an error message.
-                geolocate.innerHTML = 'position could not be found';
+            userPosition = position;
+            // Once we've got a position, zoom and center the map
+            // on it, add ad a single feature
+            m.zoom(13).center({
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
             });
+
+            var userMarkerLayer = mapbox.markers.layer();
+            m.addLayer(userMarkerLayer);
+
+            userMarkerLayer.add_feature({
+                geometry: {
+                    coordinates: [
+                    position.coords.longitude,
+                    position.coords.latitude]
+                },
+                properties: {
+                    'marker-size': 'small',
+                    'marker-color': '#4079ff',
+                    'marker-symbol': 'circle',
+                }
+            });
+
+            var tmpLocation = {
+                lon: position.coords.longitude,
+                lat: position.coords.latitude
+            };
+
+            getVenues(markerLayer, tmpLocation);
+
+            // And hide the geolocation button 
+            geolocate.parentNode.removeChild(geolocate);
+        },
+
+        function(err) {
+            // If the user chooses not to allow their location
+            // to be shared, display an error message.
+            geolocate.innerHTML = 'position could not be found';
+        });
     }
 
     function addPullEvent() {
         var pull_example = new Lungo.Element.Pull('#cal-today', {
-            onPull: "Pull down to refresh",      //Text on pulling
-            onRelease: "Release to get new data",//Text on releasing
-            onRefresh: "Refreshing...",          //Text on refreshing
-            callback: function () {               //Action on refresh
+            onPull: "Pull down to refresh", //Text on pulling
+            onRelease: "Release to get new data", //Text on releasing
+            onRefresh: "Refreshing...", //Text on refreshing
+            callback: function() { //Action on refresh
                 // alert("Pull & Refresh completed!");
                 pull_example.hide();
             }
@@ -188,12 +201,12 @@ App.Map = (function () {
             20: 'l'
         };
 
-        var parseResponse = function (result) {
+        var parseResponse = function(result) {
             venuesCache = [];
             // console.log(result);
             $$('#cal-today').html('<ul class="events-today"></ul>');
             var features = [];
-            $$.each(result.response.venues, function (index, venue) {
+            $$.each(result.response.venues, function(index, venue) {
 
                 venuesCache[venue.id] = venue;
 
@@ -205,9 +218,8 @@ App.Map = (function () {
                 features.push({
                     geometry: {
                         coordinates: [
-                            venue.lon,
-                            venue.lat
-                        ]
+                        venue.lon,
+                        venue.lat]
                     },
                     properties: {
                         'marker-size': 'small',
@@ -216,10 +228,10 @@ App.Map = (function () {
                     }
                 });
 
-//                var mydata = venuesCache[id];
+                //                var mydata = venuesCache[id];
 
                 var html = '<li class="accept"> \
-                    <a href="#subpage" data-router="section" data-name="'+ venue.name +'" data-street="'+ venue.street +'" data-distance="'+ venue.distance +'" data-venueID="' + venue.id + '" > \
+                    <a href="#subpage" data-router="section" data-name="' + venue.name + '" data-street="' + venue.street + '" data-distance="' + venue.distance + '" data-venueID="' + venue.id + '" > \
                         <div class="right" style="text-align: right">' + venue.distance + '';
 
                 if (venue.save != 0) {
@@ -245,10 +257,10 @@ App.Map = (function () {
                     <small>Venue Data powered by</small> \
                     <strong>Foursquare</strong> \
                 </a> \
-            </li><li>&nbsp;</li>'); 
+            </li><li>&nbsp;</li>');
 
 
-            $$('.calendar-layout a').on('tap', function(){
+            $$('.calendar-layout a').on('tap', function() {
 
                 var $this = $$(this);
                 var data = {
@@ -262,18 +274,18 @@ App.Map = (function () {
                 var ratedVenues = Lungo.Data.Storage.session("ratedVenues");
                 console.log(ratedVenues);
 
-                if(ratedVenues == null) {
+                if (ratedVenues == null) {
                     ratedVenues = [];
                 }
 
-                if(typeof ratedVenues[data.venueID] == 'undefined' || ratedVenues[data.venueID] != 1) {
-                    Lungo.Notification.html($$('#price-form').html(), "Don't know");    
+                if (typeof ratedVenues[data.venueID] == 'undefined' || ratedVenues[data.venueID] != 1) {
+                    Lungo.Notification.html($$('#price-form').html(), "Don't know");
                     ratedVenues[data.venueID] = 1;
                     Lungo.Data.Storage.session("ratedVenues", ratedVenues);
                 }
 
                 App.Details.setVenueData(data);
-                
+
             });
 
             markerLayer.features(features);
@@ -285,13 +297,14 @@ App.Map = (function () {
     }
 
 
-    self.init = function () {
+    self.init = function() {
         startMap();
     };
 
-    self.menu = function (el) {
+    self.menu = function(el) {
         var el = el;
         // Show hide calendar content
+
         function updateCalendarContent(el) {
             var showContent = $$(el.srcElement).data('content');
             showContent = $$('#' + showContent);
@@ -322,6 +335,6 @@ App.Map = (function () {
     return self;
 })();
 
-$$(function () {
+$$(function() {
 
 })
