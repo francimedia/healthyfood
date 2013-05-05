@@ -25,11 +25,10 @@ App.Map = (function() {
         }).zoom(zoom);
     }
 
-    
+
     /* Open/close the map
      * @param {String} action Accepts 'open' or 'close'
-     * */
-    function shutter(action) {
+     * */    function shutter(action) {
         if (typeof action !== 'string') {
             return;
         }

@@ -1327,9 +1327,13 @@ $$(function () {
     App.contentHeight = (App.winHeight - offset);
 
 
-    console.log(App.mapHeight);
+    
     $$('.calendar-layout ').css('height', App.contentHeight + 'px');
-    $$('.map').css('height', App.mapHeight + 'px');
+    // Home and Venue map
+    $$('.map, #map-canvas').css('height', App.mapHeight + 'px');
+
+
+    App.gMap.initialize();
 
 });
 
@@ -1360,11 +1364,10 @@ App.Map = (function() {
         }).zoom(zoom);
     }
 
-    
+
     /* Open/close the map
      * @param {String} action Accepts 'open' or 'close'
-     * */
-    function shutter(action) {
+     * */    function shutter(action) {
         if (typeof action !== 'string') {
             return;
         }
@@ -1729,3 +1732,42 @@ function submitPriceForm() {
     console.log(sendData);
     Lungo.Service.post(App.config.priceURL, sendData, App.Details.parseResponse, "json");   
 }
+App.gMap = function() {
+	'use strict';
+	var gMap = {};
+
+	var directionsDisplay;
+	var directionsService = new google.maps.DirectionsService();
+	var map;
+	var haight = new google.maps.LatLng(37.7699298, -122.4469157);
+	var oceanBeach = new google.maps.LatLng(37.7683909618184, -122.51089453697205);
+
+	gMap.initialize = function() {
+		directionsDisplay = new google.maps.DirectionsRenderer();
+		var mapOptions = {
+			zoom: 14,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			center: haight
+		}
+		map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		directionsDisplay.setMap(map);
+	}
+
+	gMap.calcRoute = function(org, dest) {
+		var request = {
+			origin: org,
+			destination: dest,
+			// Note that Javascript allows us to access the constant
+			// using square brackets and a string value as its
+			// "property."
+			travelMode: google.maps.TravelMode['WALKING']
+		};
+		directionsService.route(request, function(response, status) {
+			if (status == google.maps.DirectionsStatus.OK) {
+				directionsDisplay.setDirections(response);
+			}
+		});
+	}
+
+	return gMap;
+}();

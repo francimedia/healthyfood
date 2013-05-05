@@ -58,8 +58,12 @@ $$(function () {
     App.contentHeight = (App.winHeight - offset);
 
 
-    console.log(App.mapHeight);
+    
     $$('.calendar-layout ').css('height', App.contentHeight + 'px');
-    $$('.map').css('height', App.mapHeight + 'px');
+    // Home and Venue map
+    $$('.map, #map-canvas').css('height', App.mapHeight + 'px');
+
+
+    App.gMap.initialize();
 
 });
