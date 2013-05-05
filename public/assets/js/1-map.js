@@ -27,6 +27,8 @@ App.Map = (function() {
             isOpen = open;
         }
 
+        var mapHeight = 320;
+        var animationDuration = 150;
         switch (action) {
             case 'open':
                 if (!isOpen) {
@@ -34,13 +36,11 @@ App.Map = (function() {
 
                     var anim = morpheus($$('.cal-push'), {
                         height: App.winHeight + 'px',
-                        duration: 150
-                        // , bezier: [[100, 200], [200, 100]]
-                        ,
+                        duration: animationDuration,
                         complete: function() {
                             if (userPosition) {
                                 m.setSize({
-                                    x: 320,
+                                    x: mapHeight,
                                     y: App.winHeight
                                 });
                                 m.center({
@@ -57,13 +57,11 @@ App.Map = (function() {
                 if (isOpen) {
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '66%',
-                        duration: 200
-                        // , bezier: [[100, 200], [200, 100]]
-                        ,
+                        height: mapHeight + 'px',
+                        duration: animationDuration,
                         complete: function() {
                             m.setSize({
-                                x: 320,
+                                x: mapHeight,
                                 y: 148
                             }).zoom(13);
                             toggle(false);
