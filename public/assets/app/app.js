@@ -1311,23 +1311,25 @@ $$(function () {
 
 
     // Set venue list height based on window height
-    var headerHeight = 44,
-        mapHeight = 148,
-        offset = headerHeight + mapHeight;
 
     App.winHeight = window.innerHeight;
     App.winWidth = window.innerWidth;
-    App.contentHeight = (App.winHeight - offset);
-
-    App.mapHeight = 320;
+    
+    var headerHeight = 44;
+    // Default mobile height
+    App.mapHeight = 148;
 
     if(App.winWidth >= 768){
-        App.mapHeight = 520;        
+        App.mapHeight = 320;
     }
 
+    var offset = headerHeight + App.mapHeight;
+    App.contentHeight = (App.winHeight - offset);
 
+
+    console.log(App.mapHeight);
     $$('.calendar-layout ').css('height', App.contentHeight + 'px');
-    
+    $$('.map').css('height', App.mapHeight + 'px');
 
 });
 
@@ -1344,10 +1346,24 @@ App.Map = (function() {
     var geolocate = document.getElementById('geolocate');
 
     var isOpen = false;
+
+
+    function mapZoomOut(zoom){
+        // Once we've got a position, zoom and center the map
+        // on it, add ad a single feature   
+        m.setSize({
+            x: App.winWidth,
+            y: App.mapHeight
+        }).center({
+            lat: userPosition.coords.latitude,
+            lon: userPosition.coords.longitude
+        }).zoom(zoom);
+    }
+
+    
     /* Open/close the map
      * @param {String} action Accepts 'open' or 'close'
      * */
-
     function shutter(action) {
         if (typeof action !== 'string') {
             return;
@@ -1360,21 +1376,8 @@ App.Map = (function() {
             isOpen = open;
         }
 
-        var mapHeight = App.mapHeight;
+        
         var animationDuration = 150;
-
-        function setSize(height){
-            if (userPosition) {
-                m.setSize({
-                    x: App.winWidth,
-                    y: height
-                });
-                m.center({
-                    lat: userPosition.coords.latitude,
-                    lon: userPosition.coords.longitude
-                }).zoom(14);
-            }
-        }
         switch (action) {
             case 'open':
                 if (!isOpen) {
@@ -1382,9 +1385,19 @@ App.Map = (function() {
 
                     var anim = morpheus($$('.cal-push'), {
                         height: App.winHeight + 'px',
-                        duration: animationDuration,
+                        duration: animationDuration
+                        ,
                         complete: function() {
-                            setSize(App.winHeight);
+                            if (userPosition) {
+                                m.setSize({
+                                    x: App.winWidth,
+                                    y: App.winHeight
+                                });
+                                m.center({
+                                    lat: userPosition.coords.latitude,
+                                    lon: userPosition.coords.longitude
+                                }).zoom(14);
+                            }
                         }
                     });
 
@@ -1397,7 +1410,10 @@ App.Map = (function() {
                         height: App.contentHeight + 'px',
                         duration: animationDuration,
                         complete: function() {
-                            setSize(mapHeight/2);
+                            m.setSize({
+                                x: App.winWidth,
+                                y: App.mapHeight
+                            }).zoom(13);
                             toggle(false);
                         }
                     });
@@ -1456,12 +1472,7 @@ App.Map = (function() {
         function(position) {
 
             userPosition = position;
-            // Once we've got a position, zoom and center the map
-            // on it, add ad a single feature
-            m.zoom(13).center({
-                lat: position.coords.latitude,
-                lon: position.coords.longitude
-            });
+            mapZoomOut(13);
 
             var userMarkerLayer = mapbox.markers.layer();
             m.addLayer(userMarkerLayer);

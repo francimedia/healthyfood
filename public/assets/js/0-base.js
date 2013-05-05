@@ -42,22 +42,24 @@ $$(function () {
 
 
     // Set venue list height based on window height
-    var headerHeight = 44,
-        mapHeight = 148,
-        offset = headerHeight + mapHeight;
 
     App.winHeight = window.innerHeight;
     App.winWidth = window.innerWidth;
-    App.contentHeight = (App.winHeight - offset);
-
-    App.mapHeight = 320;
+    
+    var headerHeight = 44;
+    // Default mobile height
+    App.mapHeight = 148;
 
     if(App.winWidth >= 768){
-        App.mapHeight = 520;        
+        App.mapHeight = 320;
     }
 
+    var offset = headerHeight + App.mapHeight;
+    App.contentHeight = (App.winHeight - offset);
 
+
+    console.log(App.mapHeight);
     $$('.calendar-layout ').css('height', App.contentHeight + 'px');
-    
+    $$('.map').css('height', App.mapHeight + 'px');
 
 });
