@@ -51,6 +51,8 @@ $$(function () {
     var winHeight = Math.max( body.scrollHeight, body.offsetHeight, 
                        html.clientHeight, html.scrollHeight, html.offsetHeight );
 
+    App.winHeight = winHeight;
+
     $$('.calendar-layout ').css('height', (winHeight - offset) + 'px');
     // console.log(winHeight);
 

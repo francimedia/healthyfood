@@ -1320,6 +1320,8 @@ $$(function () {
     var winHeight = Math.max( body.scrollHeight, body.offsetHeight, 
                        html.clientHeight, html.scrollHeight, html.offsetHeight );
 
+    App.winHeight = winHeight;
+
     $$('.calendar-layout ').css('height', (winHeight - offset) + 'px');
     // console.log(winHeight);
 
@@ -1360,7 +1362,7 @@ App.Map = (function() {
                     toggle(true);
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: '450px',
+                        height: App.winHeight + 'px',
                         duration: 150
                         // , bezier: [[100, 200], [200, 100]]
                         ,
@@ -1368,7 +1370,7 @@ App.Map = (function() {
                             if (userPosition) {
                                 m.setSize({
                                     x: 320,
-                                    y: 420
+                                    y: App.winHeight
                                 });
                                 m.center({
                                     lat: userPosition.coords.latitude,
