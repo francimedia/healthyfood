@@ -46,14 +46,18 @@ $$(function () {
         mapHeight = 148,
         offset = headerHeight + mapHeight;
 
-    var body = document.body,
-        html = document.documentElement;
-    var winHeight = Math.max( body.scrollHeight, body.offsetHeight, 
-                       html.clientHeight, html.scrollHeight, html.offsetHeight );
-    App.winHeight = winHeight;
-    App.contentHeight = (winHeight - offset);
+    App.winHeight = window.innerHeight;
+    App.winWidth = window.innerWidth;
+    App.contentHeight = (App.winHeight - offset);
+
+    App.mapHeight = 320;
+
+    if(App.winWidth >= 768){
+        App.mapHeight = 520;        
+    }
+
 
     $$('.calendar-layout ').css('height', App.contentHeight + 'px');
-    // console.log(winHeight);
+    
 
 });

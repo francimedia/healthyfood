@@ -27,13 +27,13 @@ App.Map = (function() {
             isOpen = open;
         }
 
-        var mapHeight = 320;
+        var mapHeight = App.mapHeight;
         var animationDuration = 150;
 
         function setSize(height){
             if (userPosition) {
                 m.setSize({
-                    x: mapHeight,
+                    x: App.winWidth,
                     y: height
                 });
                 m.center({
@@ -64,7 +64,7 @@ App.Map = (function() {
                         height: App.contentHeight + 'px',
                         duration: animationDuration,
                         complete: function() {
-                            setSize(mapHeight-140);
+                            setSize(mapHeight/2);
                             toggle(false);
                         }
                     });
