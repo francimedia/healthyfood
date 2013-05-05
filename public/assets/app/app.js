@@ -1319,10 +1319,10 @@ $$(function () {
         html = document.documentElement;
     var winHeight = Math.max( body.scrollHeight, body.offsetHeight, 
                        html.clientHeight, html.scrollHeight, html.offsetHeight );
-
     App.winHeight = winHeight;
+    App.contentHeight = (winHeight - offset);
 
-    $$('.calendar-layout ').css('height', (winHeight - offset) + 'px');
+    $$('.calendar-layout ').css('height', App.contentHeight + 'px');
     // console.log(winHeight);
 
 });
@@ -1358,6 +1358,19 @@ App.Map = (function() {
 
         var mapHeight = 320;
         var animationDuration = 150;
+
+        function setSize(height){
+            if (userPosition) {
+                m.setSize({
+                    x: mapHeight,
+                    y: height
+                });
+                m.center({
+                    lat: userPosition.coords.latitude,
+                    lon: userPosition.coords.longitude
+                }).zoom(14);
+            }
+        }
         switch (action) {
             case 'open':
                 if (!isOpen) {
@@ -1367,16 +1380,7 @@ App.Map = (function() {
                         height: App.winHeight + 'px',
                         duration: animationDuration,
                         complete: function() {
-                            if (userPosition) {
-                                m.setSize({
-                                    x: mapHeight,
-                                    y: App.winHeight
-                                });
-                                m.center({
-                                    lat: userPosition.coords.latitude,
-                                    lon: userPosition.coords.longitude
-                                }).zoom(14);
-                            }
+                            setSize(App.winHeight);
                         }
                     });
 
@@ -1386,13 +1390,10 @@ App.Map = (function() {
                 if (isOpen) {
 
                     var anim = morpheus($$('.cal-push'), {
-                        height: mapHeight + 'px',
+                        height: App.contentHeight + 'px',
                         duration: animationDuration,
                         complete: function() {
-                            m.setSize({
-                                x: mapHeight,
-                                y: 148
-                            }).zoom(13);
+                            setSize(mapHeight-140);
                             toggle(false);
                         }
                     });

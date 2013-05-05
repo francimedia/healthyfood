@@ -50,10 +50,10 @@ $$(function () {
         html = document.documentElement;
     var winHeight = Math.max( body.scrollHeight, body.offsetHeight, 
                        html.clientHeight, html.scrollHeight, html.offsetHeight );
-
     App.winHeight = winHeight;
+    App.contentHeight = (winHeight - offset);
 
-    $$('.calendar-layout ').css('height', (winHeight - offset) + 'px');
+    $$('.calendar-layout ').css('height', App.contentHeight + 'px');
     // console.log(winHeight);
 
 });
