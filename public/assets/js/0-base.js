@@ -56,14 +56,10 @@ $$(function () {
 
     var offset = headerHeight + App.mapHeight;
     App.contentHeight = (App.winHeight - offset);
-
-
     
     $$('.calendar-layout ').css('height', App.contentHeight + 'px');
     // Home and Venue map
     $$('.map, #map-canvas').css('height', App.mapHeight + 'px');
-
-
-    App.gMap.initialize();
+    
 
 });

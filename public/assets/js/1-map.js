@@ -163,6 +163,8 @@ App.Map = (function() {
 
             // And hide the geolocation button 
             geolocate.parentNode.removeChild(geolocate);
+
+            // App.gMap.initialize(position.coords);
         },
 
         function(err) {
@@ -170,24 +172,11 @@ App.Map = (function() {
             // to be shared, display an error message.
             geolocate.innerHTML = 'position could not be found';
         });
-    }
 
-    function addPullEvent() {
-        var pull_example = new Lungo.Element.Pull('#cal-today', {
-            onPull: "Pull down to refresh", //Text on pulling
-            onRelease: "Release to get new data", //Text on releasing
-            onRefresh: "Refreshing...", //Text on refreshing
-            callback: function() { //Action on refresh
-                // alert("Pull & Refresh completed!");
-                pull_example.hide();
-            }
-        });
     }
 
     function getVenues(markerLayer, userLocation) {
-
         Lungo.Element.loading("#cal-today", 1);
-
         var url = "/app/api/venues.json";
         var data = userLocation;
 
@@ -234,8 +223,15 @@ App.Map = (function() {
                 // var mydata = venuesCache[id];
 
                 var html = '<li class="accept"> \
-                    <a href="#subpage" data-router="section" data-name="' + venue.name + '" data-street="' + venue.street + '" data-distance="' + venue.distance + '" data-venueID="' + venue.id + '" > \
+                    <a href="#subpage" data-router="section" data-name="' + venue.name + 
+                    '" data-street="' + venue.street + 
+                    '" data-distance="' + venue.distance +
+                    '" data-lat="' + venue.lat +
+                    '" data-lon="' + venue.lon +
+                    '" data-venueID="' + venue.id + '" > \
                         <div class="right" style="text-align: right">' + venue.distance + '';
+
+
 
                 if (venue.save != 0) {
                     html += '<br><span style="color: #ff762c;">SAVE: ' + venue.save + '%</span>';
@@ -254,9 +250,6 @@ App.Map = (function() {
             $venues.append('<li><div class="right" style="text-align: right"><img src="/assets/images/4sq_poweredby_16x16.png" alt="" /></div><small>Venue Data powered by</small><strong>Foursquare</strong></li>');
  
 
-          
-
-
             $$('.calendar-layout a').on('tap', function() {
 
                 var $this = $$(this);
@@ -264,12 +257,17 @@ App.Map = (function() {
                     name: $this.data('name'),
                     street: $this.data('street'),
                     distance: $this.data('distance'),
-                    venueID: $this.data('venueID')
+                    venueID: $this.data('venueID'),
+                    dest: {
+                        lat: $this.data('lat'),
+                        lon: $this.data('lon'),
+                    }
+                    
                 };
 
                 // was this venue already rated?
                 var ratedVenues = Lungo.Data.Storage.session("ratedVenues");
-                console.log(ratedVenues);
+                // console.log(ratedVenues);
 
                 if (ratedVenues == null) {
                     ratedVenues = [];
@@ -283,10 +281,14 @@ App.Map = (function() {
 
                 App.Details.setVenueData(data);
 
+                // App.gMap.initialize();
+
+                // Call Google maps for directions
+                App.gMap.calcRoute(userLocation, data.dest);
+
             });
 
             markerLayer.features(features);
-            // addPullEvent();
         };
 
         Lungo.Service.get(url, data, parseResponse, "json");
